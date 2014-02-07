@@ -41,9 +41,10 @@ module Thermometer
     module InstanceMethods
 
       def evaluate_level(days, ranges=Thermometer.configuration.detailed_time_ranges)
-        p days.class
+
         level = :none
         ranges.each do |k,v|
+          p k,v
           if v.include?(days)
             level = k
             break
