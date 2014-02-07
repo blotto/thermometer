@@ -44,7 +44,6 @@ module Thermometer
 
         level = :none
         ranges.each do |k,v|
-          p k,v, days
           if v.include?(days)
             level = k
             break
