@@ -1,0 +1,34 @@
+common: &default_settings
+
+  detailed_time_ranges:
+    freezing:   4.months..100.years
+    frigid:     3.months..4.months
+    frosty:     2.months..3.months
+    cold:       5.weeks..2.months
+    chilly:     3.weeks..5.weeks
+    cool:       2.weeks..3.weeks
+    temperate:  1.week..2.weeks
+    tepid:      4.days..1.week
+    lukewarm:   2.days..4.days
+    warm:       1.day..2.days
+    hot:        14.hours..1.day
+    burning:    10.hours..14.hours
+    boiling:    6.hours..10.hours
+    scalding:   3.hours..6.hours
+    scorching:  1.hours..3.hours
+    searing:    1.second..1.hour
+
+
+
+test:
+  <<: *default_settings
+
+development:
+  <<: *default_settings
+
+staging:
+  <<: *default_settings
+
+production:
+  <<: *default_settings
+
