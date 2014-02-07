@@ -19,6 +19,7 @@ module Thermometer
     #  Load ranges from config file
     #
     def load_time_ranges
+      @detailed_time_ranges = Hash.new
       src_ranges ||= @config['detailed_time_ranges']
       src_ranges.map { |k,v| @detailed_time_ranges[k.to_sym] = rangify_time_boundaries(v) }
     end
