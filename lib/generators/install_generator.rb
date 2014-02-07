@@ -4,6 +4,7 @@ class YmlGenerator < Rails::Generators::Base
 
   desc "Copy default YML to config"
   def copy_yml
-    template 'thermometer.yml', 'config/thermometer.yml'
+    copy_file 'thermometer.yml', 'config/thermometer.yml'
+    git add: "config/thermometer.yml"
   end
 end
