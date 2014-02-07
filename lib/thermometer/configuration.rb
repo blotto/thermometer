@@ -7,5 +7,10 @@ module Thermometer
     def config
       @config
     end
+
+    def detailed_time_ranges
+      @config['detailed_time_ranges']
+    end
+
   end
 end

@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = Thermometer::VERSION
   s.authors     = ["Nick Newell"]
   s.email       = ["blotto@gmail.com"]
-  s.homepage    = "none"
+  s.homepage    = "https://gitlab.com/u/blotto"
   s.summary     = "Summary of Thermometer."
   s.description = "Description of Thermometer."
 

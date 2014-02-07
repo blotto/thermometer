@@ -40,7 +40,7 @@ module Thermometer
 
     module InstanceMethods
 
-      def evaluate_level(days, ranges=Thermometer.config['detailed_time_ranges'])
+      def evaluate_level(days, ranges=Thermometer.Configuration.detailed_time_ranges)
         level = :none
         ranges.each do |k,v|
           if v.include?(days)
