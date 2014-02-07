@@ -1,8 +1,8 @@
 common: &default_settings
 
   detailed_time_ranges:
-    freezing:   4.months..100.years
-    frigid:     3.months..4.months
+    freezing:   [4.months..100.years]
+    frigid:     [3.months..4.months]
     frosty:     2.months..3.months
     cold:       5.weeks..2.months
     chilly:     3.weeks..5.weeks
