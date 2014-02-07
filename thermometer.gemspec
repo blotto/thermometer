@@ -7,11 +7,11 @@ require "thermometer/version"
 Gem::Specification.new do |s|
   s.name        = "thermometer"
   s.version     = Thermometer::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Thermometer."
-  s.description = "TODO: Description of Thermometer."
+  s.authors     = ["Nick Newell"]
+  s.email       = ["blotto@gmail.com"]
+  s.homepage    = "none"
+  s.summary     = "Summary of Thermometer."
+  s.description = "Description of Thermometer."
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
