@@ -16,10 +16,10 @@ module Thermometer
       #
       def measure_the_heat_on *associations
         options = associations.extract_options!
-        date_field = options.include?(:date) ? options[:date] : Thermometer.configuration['date']
+        date_field = options.include?(:date) ? options[:date] : Thermometer.configuration.date
         ordering = options.include?(:order) && %w(ASC DESC).include?(options[:order].to_s.upcase) ?
-            options[:order].to_s.upcase : Thermometer.configuration['order']
-        limit = options.include?(:sample) ? options[:sample].to_i : Thermometer.configuration['sample']
+            options[:order].to_s.upcase : Thermometer.configuration.order
+        limit = options.include?(:sample) ? options[:sample].to_i : Thermometer.configuration.sample
 
         associations.each do |association|
           class_eval do
@@ -30,7 +30,7 @@ module Thermometer
                 records = send(association).limit(limit)
               end
               if records.first
-                evaluate_level(time_diff_for(records.first.send(Thermometer.configuration['date'])))
+                evaluate_level(time_diff_for(records.first.send(Thermometer.configuration.date)))
               else
                 :none
               end
