@@ -10,37 +10,48 @@ module Thermometer
 
     module ClassMethods
 
-      def heat_for_time *associations
+      ##
+      # Takes one or more associations and defines methods to read temperature per
+      # association
+      #
+      def measure_the_heat_on *associations
         options = associations.extract_options!
-        date_field = options.include?(:date) ? options[:date] : :updated_at
+        date_field = options.include?(:date) ? options[:date] : Thermometer.configuration['date']
         ordering = options.include?(:order) && %w(ASC DESC).include?(options[:order].to_s.upcase) ?
-            options[:order].to_s.upcase : nil
+            options[:order].to_s.upcase : Thermometer.configuration['order']
+        limit = options.include?(:sample) ? options[:sample].to_i : Thermometer.configuration['sample']
 
         associations.each do |association|
           class_eval do
-            define_method "heat_for_time_#{association}" do
+            define_method "read_temperature_on_#{association}" do
               if ordering
-                records = send(association).order("#{date_field} #{ordering}").limit(1)
+                records = send(association).order("#{date_field} #{ordering}").limit(limit)
               else
-                records = send(association).limit(1)
+                records = send(association).limit(limit)
               end
               if records.first
-                evaluate_level(time_diff_for(records.first.updated_at))
+                evaluate_level(time_diff_for(records.first.send(Thermometer.configuration['date'])))
               else
                 :none
               end
             end
           end
         end
-
-        include Thermometer::Temperature::InstanceMethods
-
       end
-    end
 
-    module InstanceMethods
+      def read_temperature
+        results = {}
+        self.methods.grep(/read_temperature_on/).each do |method_name|
+          key = method_name.to_s
+          key.slice! "read_temperature_on_"
+          results[key] = send(method_name)
+        end
+        results
+      end
 
-      def evaluate_level(days, ranges=Thermometer.configuration.detailed_time_ranges)
+        private
+
+      def evaluate_level(days, ranges=Thermometer.configuration.default_time_range)
 
         level = :none
         ranges.each do |k,v|
@@ -62,18 +73,14 @@ module Thermometer
         evaluate_level(time_diff_for(updated_at))
       end
 
-      def temperature_per_association
-        results = {}
-        self.methods.grep(/heat_for/).each do |method_name|
-          key = method_name.to_s
-          key.slice! "heat_for_time_"
-          results[key] = send(method_name)
-        end
-        results
-      end
 
+        #include Thermometer::Temperature::InstanceMethods
 
     end
+
+    #module InstanceMethods
+    #  pass
+    #end
 
   end
 end
