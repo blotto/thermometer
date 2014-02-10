@@ -39,15 +39,7 @@ module Thermometer
         end
       end
 
-      def read_temperature
-        results = {}
-        self.methods.grep(/read_temperature_on/).each do |method_name|
-          key = method_name.to_s
-          key.slice! "read_temperature_on_"
-          results[key] = send(method_name)
-        end
-        results
-      end
+
 
         private
 
@@ -69,18 +61,30 @@ module Thermometer
         (diff.to_f/1.send(increment)).send(increment)
       end
 
+
+
+
+        include Thermometer::Temperature::InstanceMethods
+
+    end
+
+    module InstanceMethods
+
+      def read_temperature
+        results = {}
+        self.methods.grep(/read_temperature_on/).each do |method_name|
+          key = method_name.to_s
+          key.slice! "read_temperature_on_"
+          results[key] = send(method_name)
+        end
+        results
+      end
+
       def temperature
         evaluate_level(time_diff_for(updated_at))
       end
 
-
-        #include Thermometer::Temperature::InstanceMethods
-
-    end
-
-    #module InstanceMethods
-    #  pass
-    #end
+  end
 
   end
 end
