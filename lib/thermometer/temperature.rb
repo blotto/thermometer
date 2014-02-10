@@ -37,6 +37,9 @@ module Thermometer
             end
           end
         end
+
+        include Thermometer::Temperature::InstanceMethods
+
       end
 
 
@@ -64,7 +67,7 @@ module Thermometer
 
 
 
-        include Thermometer::Temperature::InstanceMethods
+
 
     end
 
@@ -84,7 +87,7 @@ module Thermometer
         evaluate_level(time_diff_for(updated_at))
       end
 
-  end
+    end
 
   end
 end
