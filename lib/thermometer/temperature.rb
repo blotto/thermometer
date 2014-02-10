@@ -30,7 +30,7 @@ module Thermometer
                 records = send(association).limit(limit)
               end
               if records.first
-                evaluate_level(time_diff_for(records.first.send(Thermometer.configuration.date)))
+                evaluate_level(Temperature.time_diff_for(records.first.send(Thermometer.configuration.date)))
               else
                 :none
               end
