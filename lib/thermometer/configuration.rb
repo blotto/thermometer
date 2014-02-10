@@ -41,7 +41,7 @@ module Thermometer
     #  If no range is called expclitly, use this one
     #
     def default_time_range
-       @default_time_range ||= @time_ranges[@config['default_time_range']]
+       @default_time_range ||= @time_ranges[@config['time_range']]
     end
 
     private
