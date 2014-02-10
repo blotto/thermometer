@@ -84,7 +84,7 @@ module Thermometer
       end
 
       def temperature
-        evaluate_level(time_diff_for(updated_at))
+        evaluate_level(Temperature.time_diff_for(updated_at))
       end
 
     end
