@@ -1,6 +1,8 @@
 # Here are the settings that are common to all environments
 common: &default_settings
 
+  # ============================== DEFAULT OPTIONS ===============================
+
   date: updated_at
   sample: 1
   order: DESC

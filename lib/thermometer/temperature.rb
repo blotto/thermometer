@@ -42,12 +42,22 @@ module Thermometer
 
       end
 
+      private
+
+      ##def with_options
+      #
+      #end
+
+
 
 
     end
 
     module InstanceMethods
 
+      ##
+      # Rollup all read_temperatures into a hash
+      #
       def read_temperature
         results = {}
         self.methods.grep(/read_temperature_on/).each do |method_name|
@@ -58,6 +68,9 @@ module Thermometer
         results
       end
 
+      ##
+      # Read the direct read_temperature on the instance itself
+      #
       def temperature
         evaluate_level(time_diff_for(updated_at))
       end
