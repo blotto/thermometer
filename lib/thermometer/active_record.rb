@@ -11,9 +11,9 @@ module Thermometer
         #load
         if size > 1
           #sample = self.map(&date_attrib.to_sym)
-          evaluate_level(average(sample).send(date_attrib.to_sym))
+          evaluate_level(average(sample))
         else
-          evaluate_level(time_diff_for(sample.first.send(date_attrib.to_sym)))
+          evaluate_level(time_diff_for(sample.first))
         end
       end
 
