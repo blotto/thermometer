@@ -33,3 +33,5 @@ module Thermometer
   end
 
 end
+
+ActiveRecord::Relation.send(:include, Thermometer::ActiveRecord::RelationMethods)

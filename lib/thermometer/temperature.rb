@@ -1,6 +1,8 @@
 module Thermometer
   module Temperature
 
+
+
     extend ActiveSupport::Concern
 
     def self.included(base)
