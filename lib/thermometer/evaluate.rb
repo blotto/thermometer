@@ -12,7 +12,7 @@ module Thermometer
       # @sample is an array of timestamps
       # @reference is a point in time to evaluate the time_diff
       def average(sample, increment=:days, reference=DateTime.now)
-        (sample.map { |s| time_diff_for(date=s, reference=reference)  }.inject{ |d,e| d+ e}.to_f / sample.size.send(increment))
+        (sample.map { |s| time_diff_for(s,increment,reference)  }.inject{ |d,e| d+ e}.to_f / sample.size.send(increment))
       end
 
       def min
