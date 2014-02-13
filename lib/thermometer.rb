@@ -16,6 +16,7 @@ require "active_record"
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require 'thermometer/configuration'
+require "thermometer/active_record"
 require "thermometer/temperature"
 
 $LOAD_PATH.shift
