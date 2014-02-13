@@ -1,22 +1,5 @@
 module Thermometer
   module Evaluate
-    module Temperatures
-      include CalcsForTime
-
-      def evaluate_level(days, ranges=Thermometer.configuration.default_time_range)
-        level = :none
-        ranges.each do |k,v|
-          if v.include?(days)
-            level = k
-            break
-          end
-        end
-        return level
-      end
-
-
-    end
-
     module CalcsForTime
 
       def time_diff_for(date, increment=:days, reference=DateTime.now)
@@ -39,6 +22,23 @@ module Thermometer
       def max
 
       end
+    end
+
+    module Temperatures
+      include Thermometer::Evaluate::CalcsForTime
+
+      def evaluate_level(days, ranges=Thermometer.configuration.default_time_range)
+        level = :none
+        ranges.each do |k,v|
+          if v.include?(days)
+            level = k
+            break
+          end
+        end
+        return level
+      end
+
+
     end
   end
 end
