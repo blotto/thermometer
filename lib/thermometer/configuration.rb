@@ -3,6 +3,7 @@ module Thermometer
     def initialize
       @config = YAML.load_file("#{Rails.root.to_s}/config/thermometer.yml")[Rails.env]
       load_time_ranges
+      load_scope_options
     end
 
     def config
@@ -24,7 +25,7 @@ module Thermometer
     # Defines how many records to sample
     #
     def sample
-      @sample ||= @config['sample']
+      @sample ||= @config['sample'].to_i
     end
 
     ##
@@ -44,7 +45,31 @@ module Thermometer
        @default_time_range ||= @time_ranges[@config['time_range']]
     end
 
+    def scope_options
+      @scope_options
+    end
+
+    def process_scope_options options=nil
+      unless options.nil?
+        date_field = options.include?(:date) ? options[:date] : self.date
+        ordering = options.include?(:order) && %w(ASC DESC).include?(options[:order].to_s.upcase) ?
+            options[:order].to_s.upcase : self.order
+        limits = options.include?(:sample) ? options[:sample].to_i : self.sample
+        options = {date: date_field, order: "#{date_field} #{ordering}", limit: limits}
+      else
+        options = @scope_options
+      end
+      return options
+    end
+
     private
+
+    def load_scope_options
+      @scope_options = Hash.new
+      @scope_options[:date] = self.date
+      @scope_options[:order] = "#{@scope_options[:date]} #{self.order}"
+      @scope_options[:limit] = self.sample
+    end
 
     ##
     #  Load ranges from config file

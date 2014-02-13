@@ -10,30 +10,38 @@ module Thermometer
 
     module ClassMethods
       include Evaluate::Temperatures
+
+      ##
+      #
+      #
+      def temperature(options, *args)
+        options = Thermometer.configuration.process_scope_options(options)
+        sample = limit(options[:limit]).order(options[:order]).pluck(options[:date])
+        if sample.size > 1
+          evaluate_level(average(sample))
+        else
+          evaluate_level(time_diff_for(sample.first))
+        end
+      end
       ##
       # Takes one or more associations and defines methods to read temperature per
       # association
       #
       def measure_the_heat_on *associations
-        options = associations.extract_options!
-        date_field = options.include?(:date) ? options[:date] : Thermometer.configuration.date
-        ordering = options.include?(:order) && %w(ASC DESC).include?(options[:order].to_s.upcase) ?
-            options[:order].to_s.upcase : Thermometer.configuration.order
-        limit = options.include?(:sample) ? options[:sample].to_i : Thermometer.configuration.sample
+        options = Thermometer.configuration.process_scope_options(associations.extract_options!)
+
 
         associations.each do |association|
           class_eval do
             define_method "read_temperature_on_#{association}" do
               if ordering
-                records = send(association).order("#{date_field} #{ordering}").limit(limit)
+                records = send(association).order("#{options[:date]} #{options[:order]}").limit(options[:sample])
               else
-                records = send(association).limit(limit)
+                records = send(association).limit(options[:sample])
               end
-              if records.first
-                evaluate_level(time_diff_for(records.first.send(Thermometer.configuration.date)))
-              else
-                :none
-              end
+
+              records.temperature
+
             end
           end
         end
@@ -71,7 +79,7 @@ module Thermometer
       ##
       # Read the direct read_temperature on the instance itself
       #
-      def temperature
+      def has_temperature
         evaluate_level(time_diff_for(updated_at))
       end
 

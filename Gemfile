@@ -12,3 +12,10 @@ gemspec
 
 # To use debugger
 # gem 'debugger'
+
+
+
+group :staging, :development, :test do
+  gem 'factory_girl_rails'
+  gem 'faker' # prod needs faker for bots
+end

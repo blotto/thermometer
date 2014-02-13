@@ -5,12 +5,10 @@ module Thermometer
     module RelationMethods
       include Evaluate::Temperatures
 
-      def temperature *args
-        date_attrib = Thermometer.configuration.date
-        sample = pluck(date_attrib)
-        #load
+      def temperature(options=nil, *args)
+        options = Thermometer.configuration.process_scope_options(options)
+        sample = limit(options[:limit]).order(options[:order]).pluck(options[:date])
         if sample.size > 1
-          #sample = self.map(&date_attrib.to_sym)
           evaluate_level(average(sample))
         else
           evaluate_level(time_diff_for(sample.first))
