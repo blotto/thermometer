@@ -1,7 +1,7 @@
 module Thermometer
   module Evaluate
     module Temperatures
-      include Time
+      include CalcsForTime
 
       def evaluate_level(days, ranges=Thermometer.configuration.default_time_range)
         level = :none
@@ -17,7 +17,7 @@ module Thermometer
 
     end
 
-    module Time
+    module CalcsForTime
 
       def time_diff_for(date, increment=:days, reference=DateTime.now)
         now = Time.at(reference)
