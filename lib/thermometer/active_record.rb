@@ -9,7 +9,7 @@ module Thermometer
         date_attrib = Thermometer.configuration.date
         sample = pluck(date_attrib)
         #load
-        if size > 1
+        if sample.size > 1
           #sample = self.map(&date_attrib.to_sym)
           evaluate_level(average(sample))
         else
