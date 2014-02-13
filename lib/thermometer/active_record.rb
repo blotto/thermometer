@@ -6,11 +6,7 @@ module Thermometer
       include Evaluate::Temperatures
 
       def temperature *args
-        if eager_loading?
-          unscoped.load
-        else
-          load
-        end
+        unscoped.load
         evaluate_level(time_diff_for(self.first.send(Thermometer.configuration.date)))
       end
 
