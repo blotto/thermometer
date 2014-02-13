@@ -6,8 +6,13 @@ module Thermometer
       include Evaluate::Temperatures
 
       def temperature *args
-        unscoped.load
-        evaluate_level(time_diff_for(self.first.send(Thermometer.configuration.date)))
+        load
+        if size > 1
+          sample = self.map(&:Thermometer.configuration.date)
+          evaluate_level(average(sample))
+        else
+          evaluate_level(time_diff_for(self.first.send(Thermometer.configuration.date)))
+        end
       end
 
 
