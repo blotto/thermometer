@@ -5,7 +5,7 @@
 
 
 
-<% (@owners.size*2).times do |n| %>
+<% (@owners.size).times do |n| %>
 
 <% @owner =  @owners.delete(@owners.sample) %>
 
