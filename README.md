@@ -3,10 +3,10 @@ Temperature
 
 
 ### Mixins
-This plugin introduces one mixins to your recipe book:
+This plugin introduces two mixins to your recipe book:
 
-1. **measure\_the\_heat\_on** : Allows customization on an association, or method that returns an ActiveRecord Collection
-2. **temperature**
+1. **acts\_as\_thermometer** : Extends Instance with temperature methods
+2. **measure\_the\_heat\_on** : Allows customization on an association, or method that returns an ActiveRecord Collection
 
 
 ### Motivation

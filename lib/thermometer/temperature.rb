@@ -11,10 +11,17 @@ module Thermometer
     module ClassMethods
       include Evaluate::Temperatures
 
+      def acts_as_thermometer
+        include Thermometer::Temperature::InstanceMethods
+      end
+    #end
+
+    #module SingletonMethods
+
       ##
       #
       #
-      def temperature(options, *args)
+      def temperature(options=nil, *args)
         options = Thermometer.configuration.process_scope_options(options)
         sample = limit(options[:limit]).order(options[:order]).pluck(options[:date])
         if sample.size > 1
@@ -25,6 +32,7 @@ module Thermometer
           :none
         end
       end
+
       ##
       # Takes one or more associations and defines methods to read temperature per
       # association
@@ -36,21 +44,17 @@ module Thermometer
         associations.each do |association|
           class_eval do
             define_method "read_temperature_on_#{association}" do
-              if ordering
-                records = send(association).order("#{options[:date]} #{options[:order]}").limit(options[:sample])
-              else
-                records = send(association).limit(options[:sample])
-              end
-
+              records = send(association).order("#{options[:date]} #{options[:order]}").limit(options[:sample])
               records.temperature
-
             end
           end
         end
 
-        include Thermometer::Temperature::InstanceMethods
-
       end
+
+
+
+      #end
 
       private
 
@@ -64,11 +68,14 @@ module Thermometer
     end
 
     module InstanceMethods
+      include Evaluate::Temperatures
+      include Evaluate::CalcsForTime
+
 
       ##
       # Rollup all read_temperatures into a hash
       #
-      def read_temperature
+      def has_temperatures
         results = {}
         self.methods.grep(/read_temperature_on/).each do |method_name|
           key = method_name.to_s
@@ -85,9 +92,34 @@ module Thermometer
         evaluate_level(time_diff_for(updated_at))
       end
 
+      ##
+      # Read the direct read_temperature on the instance itself
+      #
+      def has_temperature?(level)
+        level.to_s == has_temperature.to_s
+      end
+
+      def is_warmer_than?(level)
+        compare_level_to(level) do |x,y|
+          x > y
+        end
+      end
+
+      def is_colder_than?(level)
+        compare_level_to(level) do |x,y|
+          x < y
+        end
+      end
+
+
+
+
       private
 
-
+      def compare_level_to(level)
+         yield Thermometer.configuration.default_time_range[level].max,
+             Thermometer.configuration.default_time_range[has_temperature].min
+      end
 
     end
 

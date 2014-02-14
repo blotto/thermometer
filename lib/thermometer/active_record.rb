@@ -5,7 +5,7 @@ module Thermometer
     module RelationMethods
       include Evaluate::Temperatures
 
-      def temperature(options=nil, *args)
+      def has_temperature(options=nil, *args)
         options = Thermometer.configuration.process_scope_options(options)
         sample = limit(options[:limit]).order(options[:order]).pluck(options[:date])
         if sample.size > 1
@@ -15,6 +15,23 @@ module Thermometer
         else
           :none
         end
+      end
+
+      ##
+      # Read the direct read_temperature on the instance itself
+      #
+      def has_temperature?(level)
+        level.to_s == has_temperature.to_s
+      end
+
+      def is_warmer_than?(level)
+        Thermometer.configuration.default_time_range[has_temperature].min <
+        Thermometer.configuration.default_time_range[level].max
+      end
+
+      def is_colder_than?(level)
+        Thermometer.configuration.default_time_range[has_temperature].min >
+        Thermometer.configuration.default_time_range[level].max
       end
 
 
@@ -41,5 +58,6 @@ module Thermometer
   #::ActiveRecord::Base.extend RelationMethods
 
 end
+
 
 ActiveRecord::Relation.send(:include, Thermometer::ActiveRecord::RelationMethods)
