@@ -19,8 +19,10 @@ module Thermometer
         sample = limit(options[:limit]).order(options[:order]).pluck(options[:date])
         if sample.size > 1
           evaluate_level(average(sample))
-        else
+        elsif sample.size == 1
           evaluate_level(time_diff_for(sample.first))
+        else
+          :none
         end
       end
       ##

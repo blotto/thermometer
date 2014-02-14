@@ -17,5 +17,6 @@ gemspec
 
 group :staging, :development, :test do
   gem 'factory_girl_rails'
-  gem 'faker' # prod needs faker for bots
+  gem 'faker'       # faker for fixtures
+  gem 'squeel'      # easier model associations
 end
