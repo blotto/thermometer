@@ -13,11 +13,36 @@ This plugin introduces two mixins to your recipe book:
 
 This plugin was started as a way for Bots to quickly assess the state of a User across many dimensions of Game play to
 determine automated actions for retention. For example, if a User went *cold* with regards to reading messages,
-a reminder could be sent. Rather than dealing with dates and duration, coding use a simplified syntax,
+a reminder could be sent. Rather than dealing with dates and duration, coding uses a simplified syntax,
 for example :
 
     user = User.first
-    user.remind if user.unread_messages.temperature?(:cold)
+    user.*call_to_some_action* if user.unread_messages.has_temperature?(:cold)  # false|true
+    user.*call_to_some_action* if user.unread_messages.is_colder_than?(:warm)   # false|true
+
+
+Installation
+------------
+
+In your gemfile
+
+	gem "temperature"  , github: 'blotto/temperature', :branch => "first_release"
+
+Then at the command line
+
+	bundle update --source temperature
+	rails generate rocket_tag:install
+
+Configuration
+-------------
+
+
+Copyright
+---------
+
+Copyright (c) 2014 Nick Newell. See LICENSE.txt for further details.
+
+
 
 
 
