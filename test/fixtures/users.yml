@@ -1,10 +1,10 @@
 <% require 'faker' %>
 <% require '../dummy/lib/helper_methods' %>
+<% @users = (1..50).to_a %>
 
 
 
-
-<% 50.times do |n| %>
+<% (@users.size).times do |n| %>
 user_<%= n %>:
   name: <%= Faker::Name.name %>
   created_at: <%= @created_at = time_rand(Time.now-6.months) %>
