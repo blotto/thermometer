@@ -1,4 +1,4 @@
-Temperature
+Thermometer
 =======
 
 
@@ -31,10 +31,32 @@ In your gemfile
 Then at the command line
 
 	bundle update --source temperature
-	rails generate rocket_tag:install
+	rails generate temperature:install
 
 Configuration
 -------------
+
+After install a YAML file is placed in the config directory, *config/thermometer.yml*. For a detailed description of the
+available options, read the comments within the YAML file.
+
+
+Usage
+-----
+
+```ruby
+class User < ActiveRecord::Base
+
+  acts_as_thermometer
+
+  measure_the_heat_on :messages
+
+  has_many :messages
+
+  has_many :oldest_messages, -> {where('created_at < ?', 4.months.ago)} , class_name: "Message"
+  has_many :recent_messages, -> {where('created_at > ? AND created_at < ?', 4.months.ago , 1.month.ago)} , class_name: "Message"
+  has_many :newest_messages, -> {where('created_at > ?', 1.month.ago)} , class_name: "Message"
+end
+```
 
 
 Copyright
