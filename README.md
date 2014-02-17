@@ -1,6 +1,8 @@
 Thermometer
 =======
 
+{<img src="https://secure.travis-ci.org/blotto/thermometer.png" />}[http://travis-ci.org/blotto/thermometer]
+
 
 ### Mixins
 This plugin introduces two mixins to your recipe book:
@@ -26,7 +28,9 @@ Installation
 
 In your gemfile
 
-	gem "temperature"  , github: 'blotto/temperature', :branch => "first_release"
+```ruby
+gem "temperature"  , github: 'blotto/temperature', :branch => "first_release"
+```
 
 Then at the command line
 
@@ -39,8 +43,13 @@ Configuration
 After install a YAML file is placed in the config directory, *config/thermometer.yml*. For a detailed description of the
 available options, read the comments within the YAML file.
 
+### ActiveRecord Dependency
 
-Usage
+Models must have the automatically managed columns *created_at* and *updated_at* in order to evaluate the temperature.
+
+
+
+Typical Usage
 -----
 
 ```ruby
@@ -48,16 +57,57 @@ class User < ActiveRecord::Base
 
   acts_as_thermometer
 
-  measure_the_heat_on :messages
+  has_many :messages
+
+  has_many :oldest_messages, -> {where('created_at < ?', 4.months.ago)} , class_name: "Message"
+  has_many :recent_messages, -> {where('created_at > ? AND created_at < ?', 4.months.ago , 1.month.ago)} , class_name: "Message"
+  has_many :newest_messages, -> {where('created_at > ?', 1.month.ago)} , class_name: "Message"
+
+ end
+```
+
+Measure the heat on an instance of User through various methods when *acts_as_thermometer* is added to the Model
+
+```ruby
+User.first.has_temperature        # lukewarm
+User.first.is_colder_than? :warm  # false
+User.first.is_warmer_than? :cold  # true
+```
+
+Measure the heat on any association, or scope
+
+```ruby
+User.first.messages.has_temperature               # temperate
+User.first.oldest_messages.has_temperature        # frigid
+User.first.recent_messages.is_colder_than? :warm  # false
+User.first.newest_messages.is_warmer_than? :cold  # true
+```
+
+Customizing Usage
+-----
+
+in most cases, how you measure the heat is consistent across Models, and Associations, therefore keep your customizations
+global by changing options in the YAML file.  However, you could pass through customizations specific to a particular use
+case.
+
+Configs can be passed through in a number of scenarios.
+
+
+
+```ruby
+class User < ActiveRecord::Base
+
+  acts_as_thermometer
 
   has_many :messages
 
   has_many :oldest_messages, -> {where('created_at < ?', 4.months.ago)} , class_name: "Message"
   has_many :recent_messages, -> {where('created_at > ? AND created_at < ?', 4.months.ago , 1.month.ago)} , class_name: "Message"
   has_many :newest_messages, -> {where('created_at > ?', 1.month.ago)} , class_name: "Message"
-end
-```
 
+ end
+
+```
 
 Copyright
 ---------
