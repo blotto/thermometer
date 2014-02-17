@@ -1,7 +1,7 @@
 Thermometer
 =======
 
-{<img src="https://secure.travis-ci.org/blotto/thermometer.png" />}[http://travis-ci.org/blotto/thermometer]
+[<img src="https://secure.travis-ci.org/blotto/thermometer.png" />](http://travis-ci.org/blotto/thermometer)
 
 
 ### Mixins
