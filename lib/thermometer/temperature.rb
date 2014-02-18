@@ -37,7 +37,7 @@ module Thermometer
       # Takes one or more associations and defines methods to read temperature per
       # association
       #
-      def measure_the_heat_on *associations
+      def measures_temperature_for *associations
         options = Thermometer.configuration.process_scope_options(associations.extract_options!)
 
 
@@ -47,7 +47,7 @@ module Thermometer
               records = send(association).order("#{options[:date]} #{options[:order]}").limit(options[:sample])
               records.has_temperature
             end
-            association.extend Thermometer::ActiveRecord::RelationMethods
+            reflections[association].options[:extend] = Thermometer::ActiveRecord::RelationMethods if reflections[association].respond_to?(:options)
           end
 
 
@@ -56,14 +56,6 @@ module Thermometer
       end
 
 
-
-      #end
-
-      private
-
-      ##def with_options
-      #
-      #end
 
 
 
