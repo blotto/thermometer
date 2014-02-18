@@ -45,9 +45,12 @@ module Thermometer
           class_eval do
             define_method "read_temperature_on_#{association}" do
               records = send(association).order("#{options[:date]} #{options[:order]}").limit(options[:sample])
-              records.temperature
+              records.has_temperature
             end
+            association.extend Thermometer::ActiveRecord::RelationMethods
           end
+
+
         end
 
       end

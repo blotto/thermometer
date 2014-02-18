@@ -18,7 +18,8 @@ common: &default_settings
   #
   #
 
-  time_range: detailed
+  time_range:       detailed
+  intensity_range:  brief
 
   # Multiple time ranges can be defined here.
 
@@ -45,6 +46,19 @@ common: &default_settings
       cold:      3.days..100.years
       hot:       1.second..3.days
 
+  intensity:
+    detailed:
+        very_light:         1..5
+        light:              5..10
+        slightly_moderate:  10..15
+        moderate:           15..25
+        heavy:              25..50
+        very_heavy:         50
+
+    brief:
+      light:    1..5
+      moderate: 5..15
+      heavy:    15
 # Application Environments
 # ------------------------------------------
 

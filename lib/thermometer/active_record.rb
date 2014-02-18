@@ -60,4 +60,4 @@ module Thermometer
 end
 
 
-ActiveRecord::Relation.send(:include, Thermometer::ActiveRecord::RelationMethods)
+#ActiveRecord::Relation.send(:include, Thermometer::ActiveRecord::RelationMethods)
