@@ -19,4 +19,5 @@ group :staging, :development, :test do
   gem 'factory_girl_rails'
   gem 'faker'       # faker for fixtures
   gem 'squeel'      # easier model associations
+  gem 'coveralls', require: false
 end

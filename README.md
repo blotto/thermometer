@@ -3,6 +3,8 @@ Thermometer
 
 [<img src="https://secure.travis-ci.org/blotto/thermometer.png" />](http://travis-ci.org/blotto/thermometer)
 [![Code Climate](https://codeclimate.com/github/blotto/thermometer.png)](https://codeclimate.com/github/blotto/thermometer)
+[![Dependency Status](https://gemnasium.com/blotto/thermometer.png)](https://gemnasium.com/blotto/thermometer)
+[![Coverage Status](https://coveralls.io/repos/blotto/thermometer/badge.png)](https://coveralls.io/r/blotto/thermometer)
 
 ### Mixins
 This plugin introduces two mixins to your recipe book:
