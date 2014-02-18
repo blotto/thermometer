@@ -54,6 +54,8 @@ Models must have the automatically managed columns *created_at* and *updated_at*
 Typical Usage
 -----
 
+Measure the temperature on an instance of User through various methods when *acts_as_thermometer* is added to the Model
+
 ```ruby
 class User < ActiveRecord::Base
 
@@ -68,7 +70,7 @@ class User < ActiveRecord::Base
  end
 ```
 
-Measure the heat on an instance of User through various methods when *acts_as_thermometer* is added to the Model
+
 
 ```ruby
 User.first.has_temperature        # lukewarm
@@ -76,7 +78,23 @@ User.first.is_colder_than? :warm  # false
 User.first.is_warmer_than? :cold  # true
 ```
 
-Measure the heat on any association, or scope
+Measure the temperature on any association, or scope
+
+```ruby
+class User < ActiveRecord::Base
+
+  acts_as_thermometer
+
+  has_many :messages
+
+  has_many :oldest_messages, -> {where('created_at < ?', 4.months.ago)} , class_name: "Message"
+  has_many :recent_messages, -> {where('created_at > ? AND created_at < ?', 4.months.ago , 1.month.ago)} , class_name: "Message"
+  has_many :newest_messages, -> {where('created_at > ?', 1.month.ago)} , class_name: "Message"
+
+  measures_temperature_for :messages, :oldest_messages , :recent_messages , :newest_messages
+
+ end
+```
 
 ```ruby
 User.first.messages.has_temperature               # temperate
@@ -88,7 +106,7 @@ User.first.newest_messages.is_warmer_than? :cold  # true
 Customizing Usage
 -----
 
-in most cases, how you measure the heat is consistent across Models, and Associations, therefore keep your customizations
+In most cases, how you measure the temperature is consistent across Models, and Associations, therefore keep your customizations
 global by changing options in the YAML file.  However, you could pass through customizations specific to a particular use
 case.
 
@@ -106,6 +124,8 @@ class User < ActiveRecord::Base
   has_many :oldest_messages, -> {where('created_at < ?', 4.months.ago)} , class_name: "Message"
   has_many :recent_messages, -> {where('created_at > ? AND created_at < ?', 4.months.ago , 1.month.ago)} , class_name: "Message"
   has_many :newest_messages, -> {where('created_at > ?', 1.month.ago)} , class_name: "Message"
+
+  measures_temperature_for :messages, *options_hash*
 
  end
 
