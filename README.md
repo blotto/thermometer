@@ -143,7 +143,7 @@ case.
 
 Configs can be passed through in a number of scenarios.
 
-
+### Via
 
 ```ruby
 class User < ActiveRecord::Base
@@ -156,11 +156,27 @@ class User < ActiveRecord::Base
   has_many :recent_messages, -> {where('created_at > ? AND created_at < ?', 4.months.ago , 1.month.ago)} , class_name: "Message"
   has_many :newest_messages, -> {where('created_at > ?', 1.month.ago)} , class_name: "Message"
 
-  measures_temperature_for :messages, *options_hash*
+  measures_temperature_for :messages, {:explicit=>true, :date => :updated_at}  #only use options defined here
+  measures_temperature_for :recent_messages, {:date => 'updated_at'} #use this date, and default options
+  measures_temperature_for :newest_messages,
+                    {:date => 'messages.updated_at', :sample => 3} #clearly defined date field, sampling 3 records
 
  end
 
 ```
+
+```ruby
+> User.first.messages.has_temperature
+  User Load (0.1ms)  SELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT 1
+   (1.4ms)  SELECT "messages"."updated_at" FROM "messages" WHERE "messages"."user_id" = ?  [["user_id", 14035331]]
+ => "frosty"
+
+ > User.first.newest_messages.has_temperature
+   User Load (0.2ms)  SELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT 1
+    (0.6ms)  SELECT messages.created_at FROM "messages" WHERE "messages"."user_id" = ? AND (created_at >
+    '2014-01-19 23:44:59.413221') ORDER BY messages.created_at DESC LIMIT 3  [["user_id", 14035331]]
+  => :none
+ ```
 
 Copyright
 ---------

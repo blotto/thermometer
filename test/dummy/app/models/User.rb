@@ -12,4 +12,17 @@ class User < ActiveRecord::Base
 
   measures_temperature_for :messages, {:explicit=>true, :date => :updated_at}
 
+  measures_temperature_for :oldest_messages, :recent_messages, {:date => 'updated_at'} #only use options defined here
+  measures_temperature_for :newest_messages, {:date => 'messages.created_at', :sample => 3} #clearly defined date field
+
+  class << self
+    def name_like(substring)
+      where("name LIKE '%#{substring}%'")
+    end
+  end
+
+  def last_five_messages
+    messages.limit(5)
+  end
+
 end
