@@ -80,7 +80,7 @@ User.first.is_colder_than? :warm  # false
 User.first.is_warmer_than? :cold  # true
 ```
 
-Measure the temperature on any association, or scope. NOTE: declare `measures_temperature_for` after your associations!
+Measure the temperature on any association. NOTE: declare `measures_temperature_for` after your associations!
 
 ```ruby
 class User < ActiveRecord::Base
@@ -119,6 +119,10 @@ class User < ActiveRecord::Base
       def name_like(substring)
         where("name LIKE '%#{substring}%'")
       end
+   end
+
+   def last_five_messages
+     messages.limit(5)
    end
 
  end
