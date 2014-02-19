@@ -1,5 +1,5 @@
 <% require 'faker' %>
-<% require '../dummy/lib/helper_methods' %>
+<% require 'helper_methods' %>
 <% @users = (1..50).to_a %>
 
 
