@@ -67,6 +67,8 @@ class User < ActiveRecord::Base
   has_many :recent_messages, -> {where('created_at > ? AND created_at < ?', 4.months.ago , 1.month.ago)} , class_name: "Message"
   has_many :newest_messages, -> {where('created_at > ?', 1.month.ago)} , class_name: "Message"
 
+
+
  end
 ```
 
@@ -78,7 +80,7 @@ User.first.is_colder_than? :warm  # false
 User.first.is_warmer_than? :cold  # true
 ```
 
-Measure the temperature on any association, or scope
+Measure the temperature on any association, or scope. NOTE: declare `measures_temperature_for` after your associations!
 
 ```ruby
 class User < ActiveRecord::Base
@@ -102,6 +104,31 @@ User.first.oldest_messages.has_temperature        # frigid
 User.first.recent_messages.is_colder_than? :warm  # false
 User.first.newest_messages.is_warmer_than? :cold  # true
 ```
+
+Method Chaining
+-----
+
+You can check the temperature on scopes...
+
+```ruby
+class User < ActiveRecord::Base
+
+  acts_as_thermometer
+
+  class << self
+      def name_like(substring)
+        where("name LIKE '%#{substring}%'")
+      end
+   end
+
+ end
+```
+
+```ruby
+User.name_like("Ms.").has_temperature               # temperate
+User.name_like("Ms.").first.last_five_messages.has_temperature # warm
+```
+
 
 Customizing Usage
 -----
