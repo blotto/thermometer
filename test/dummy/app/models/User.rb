@@ -10,6 +10,6 @@ class User < ActiveRecord::Base
   has_many :recent_messages, -> {where('created_at > ? AND created_at < ?', 4.months.ago , 1.month.ago)} , class_name: "Message"
   has_many :newest_messages, -> {where('created_at > ?', 1.month.ago)} , class_name: "Message"
 
-  measure_the_heat_on :messages
+  measures_temperature_for :messages, {:explicit=>true, :date => :updated_at}
 
 end

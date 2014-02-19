@@ -28,6 +28,39 @@ module Thermometer
     module Temperatures
       include Thermometer::Evaluate::CalcsForTime
 
+
+      def has_temperature(options={})
+        sample = sample_records options
+        if sample.size > 1
+          evaluate_level(average(sample))
+        elsif sample.size == 1
+          evaluate_level(time_diff_for(sample.first))
+        else
+          :none
+        end
+      end
+
+      ##
+      # Read the direct read_temperature on the instance itself
+      #
+      def has_temperature?(level,options={})
+        level.to_s == has_temperature(options).to_s
+      end
+
+      def is_warmer_than?(level,options={})
+        compare_level_to(level,options) do |x,y|
+          x > y
+        end
+      end
+
+      def is_colder_than?(level,options={})
+        compare_level_to(level,options) do |x,y|
+          x < y
+        end
+      end
+
+      private
+
       def evaluate_level(days, ranges=Thermometer.configuration.default_time_range)
         level = :none
         ranges.each do |k,v|
@@ -37,6 +70,15 @@ module Thermometer
           end
         end
         return level
+      end
+
+      def compare_level_to(level, options)
+        yield Thermometer.configuration.default_time_range[level].max,
+            Thermometer.configuration.default_time_range[has_temperature(options)].min
+      end
+
+      def sample_records
+        raise "Subclass is responsible for defining this method."
       end
 
 

@@ -49,17 +49,35 @@ module Thermometer
       @scope_options
     end
 
-    def process_scope_options options=nil
+    def process_scope_options options
+      processed_options = Hash.new
+
       unless options.nil?
-        date_field = options.include?(:date) ? options[:date] : self.date
-        ordering = options.include?(:order) && %w(ASC DESC).include?(options[:order].to_s.upcase) ?
-            options[:order].to_s.upcase : self.order
-        limits = options.include?(:sample) ? options[:sample].to_i : self.sample
-        options = {date: date_field, order: "#{date_field} #{ordering}", limit: limits}
+
+        processed_options[:date] = options.include?(:date) ? options[:date] : self.date  #we always need this
+
+        if options.include?(:explicit)
+          #dont use defaults when a scope option is absent
+          processed_options[:order] = options.include?(:order) && %w(ASC DESC).include?(options[:order].to_s.upcase) ?
+              "#{processed_options[:date]} #{options[:order].to_s.upcase}"  : nil
+          processed_options[:limit] = options.include?(:sample) ? options[:sample].to_i : nil
+        else
+          processed_options[:order] = options.include?(:order) && %w(ASC DESC).include?(options[:order].to_s.upcase) ?
+              "#{processed_options[:date]} #{options[:order].to_s.upcase}"  :  "#{processed_options[:date]} #{self.order}"
+          processed_options[:limit] = options.include?(:sample) ? options[:sample].to_i : self.sample
+
+        end
+
+        processed_options.each do |k,v|
+           if v.nil?
+             processed_options.delete k
+           end
+        end
+
       else
-        options = @scope_options
+        processed_options = @scope_options
       end
-      return options
+      return processed_options
     end
 
     private

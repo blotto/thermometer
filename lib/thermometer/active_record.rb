@@ -5,33 +5,20 @@ module Thermometer
     module RelationMethods
       include Evaluate::Temperatures
 
-      def has_temperature(options=nil, *args)
-        options = Thermometer.configuration.process_scope_options(options)
-        sample = limit(options[:limit]).order(options[:order]).pluck(options[:date])
-        if sample.size > 1
-          evaluate_level(average(sample))
-        elsif sample.size == 1
-          evaluate_level(time_diff_for(sample.first))
+      private
+
+      def sample_records options
+        options = Thermometer.configuration.process_scope_options(proxy_association.reflection.options[:thermometer].merge(options))
+
+        if options[:limit] && options[:order]
+          sample = limit(options[:limit]).order(options[:order]).pluck(options[:date])
+        elsif options[:limit] && options[:order].nil?
+          sample = limit(options[:limit]).pluck(options[:date])
+        elsif options[:limit].nil? && options[:order]
+          sample = order(options[:order]).pluck(options[:date])
         else
-          :none
+          sample = pluck(options[:date])
         end
-      end
-
-      ##
-      # Read the direct read_temperature on the instance itself
-      #
-      def has_temperature?(level)
-        level.to_s == has_temperature.to_s
-      end
-
-      def is_warmer_than?(level)
-        Thermometer.configuration.default_time_range[has_temperature].min <
-        Thermometer.configuration.default_time_range[level].max
-      end
-
-      def is_colder_than?(level)
-        Thermometer.configuration.default_time_range[has_temperature].min >
-        Thermometer.configuration.default_time_range[level].max
       end
 
 
