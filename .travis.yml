@@ -9,6 +9,7 @@ env:
 script:
   - RAILS_ENV=test
   - sh -c 'cd test/dummy'
+  - sh -c 'ls -ll'
   - bundle exec rake db:drop db:create db:migrate db:seed test
   - sh -c 'cd ../..'
   - bundle exec rake test
