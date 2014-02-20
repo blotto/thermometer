@@ -9,13 +9,7 @@ env:
   #- DB=postgresql
 script:
   - RAILS_ENV=test
-  - sh -c 'cd test/dummy'
-  - sh -c 'ls -ll'
-  - sh -c 'cd ./test/dummy'
-  - sh -c 'ls -ll'
-  - sh -c 'cd ./test'
-  - sh -c 'ls -ll'
-  - cd .test/dummy
+  - cd ./test/dummy
   - bundle exec rake db:drop db:create db:migrate db:seed test
-  - sh -c 'cd ../..'
+  - cd ../..
   - bundle exec rake test
