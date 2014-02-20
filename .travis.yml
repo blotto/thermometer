@@ -12,4 +12,5 @@ script:
   - cd ./test/dummy
   - bundle exec rake db:drop db:create db:migrate db:test:prepare
   - cd ../..
+  - ls la
   - bundle exec rake test

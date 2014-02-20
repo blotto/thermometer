@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
-  set_fixture_class 'dummy/models/user' =>  User
+  #set_fixture_class 'dummy/models/user' =>  User
 
 
    test "instance should respond to has_temperature" do
