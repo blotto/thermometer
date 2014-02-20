@@ -172,6 +172,8 @@ class User < ActiveRecord::Base
 
 ### Overriding options via method calls
 
+You can pass options on all available methods.
+
 ```ruby
 > User.first.newest_messages.has_temperature :sample => 5
   User Load (0.3ms)  SELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT 1
@@ -195,7 +197,7 @@ class User < ActiveRecord::Base
 ### Using AREL Relations directly
 
 You can chain methods on relations. Note, that without explicitly excluding them, defaults will be applied. This example,
-only samples the last record in the ActiveRecord collection.
+only samples the last record in the ActiveRecord collection because the default sample size is 1.
 
 ```ruby
 > User.where('created_at > ?', (Time.now - 3.weeks)).has_temperature
@@ -216,6 +218,10 @@ You can still apply other options :
 ```ruby
 > User.where('created_at > ?', (Time.now - 3.weeks)).has_temperature :explicit=>true , :date => :updated_at
    (28.7ms)  SELECT "users"."updated_at" FROM "users" WHERE (created_at > '2014-01-30 00:25:23.563479')
+ => "temperate"
+
+> User.where('created_at > ?', (Time.now - 3.weeks)).has_temperature :explicit=>true , :date => :updated_at, :sample => 6, :order => 'desc'
+   (0.4ms)  SELECT "users"."updated_at" FROM "users" WHERE (created_at > '2014-01-30 00:30:26.123044') ORDER BY updated_at DESC LIMIT 6
  => "temperate"
 ```
 
