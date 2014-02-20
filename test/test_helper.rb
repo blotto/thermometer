@@ -24,7 +24,7 @@ ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
 # Load fixtures from the engine
 class ActiveSupport::TestCase
 
-  set_fixture_class :user => "User"
+  set_fixture_class :users => "User"
 
   fixtures :all
 end
