@@ -51,30 +51,24 @@ Models must have the automatically managed columns *created_at* and *updated_at*
 
 
 
-Typical Usage
+Typical Usage for `acts_as_thermometer`
 -----
 
-Measure the temperature on an instance of User through various methods when *acts_as_thermometer* is added to the Model
+Measure the temperature on the Class , and on an Instance
 
 ```ruby
 class User < ActiveRecord::Base
 
   acts_as_thermometer
 
-  has_many :messages
-
-  has_many :oldest_messages, -> {where('created_at < ?', 4.months.ago)} , class_name: "Message"
-  has_many :recent_messages, -> {where('created_at > ? AND created_at < ?', 4.months.ago , 1.month.ago)} , class_name: "Message"
-  has_many :newest_messages, -> {where('created_at > ?', 1.month.ago)} , class_name: "Message"
-
-
-
- end
+end
 ```
 
-
-
 ```ruby
+User.has_temperature        # lukewarm
+User.is_colder_than? :warm  # false
+User.is_warmer_than? :cold  # true
+
 User.first.has_temperature        # lukewarm
 User.first.is_colder_than? :warm  # false
 User.first.is_warmer_than? :cold  # true
@@ -143,7 +137,7 @@ case.
 
 Configs can be passed through in a number of scenarios.
 
-### Via
+### Overriding options via measures_temperature_for
 
 ```ruby
 class User < ActiveRecord::Base
@@ -171,12 +165,35 @@ class User < ActiveRecord::Base
    (1.4ms)  SELECT "messages"."updated_at" FROM "messages" WHERE "messages"."user_id" = ?  [["user_id", 14035331]]
  => "frosty"
 
- > User.first.newest_messages.has_temperature
-   User Load (0.2ms)  SELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT 1
+> User.first.newest_messages.has_temperature
+  User Load (0.2ms)  SELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT 1
     (0.6ms)  SELECT messages.created_at FROM "messages" WHERE "messages"."user_id" = ? AND (created_at >
     '2014-01-19 23:44:59.413221') ORDER BY messages.created_at DESC LIMIT 3  [["user_id", 14035331]]
-  => :none
+ => :none
  ```
+
+ ### Overriding options via method call
+
+```ruby
+> User.first.newest_messages.has_temperature :sample => 5
+  User Load (0.3ms)  SELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT 1
+   (0.4ms)  SELECT messages.created_at FROM "messages" WHERE "messages"."user_id" = ? AND (created_at > '2014-01-20 00:04:54.558920') ORDER BY messages.created_at DESC LIMIT 5  [["user_id", 14035331]]
+ => :none
+
+> User.first.messages.has_temperature :date => 'created_at'
+  User Load (0.2ms)  SELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT 1
+   (0.4ms)  SELECT created_at FROM "messages" WHERE "messages"."user_id" = ?  [["user_id", 14035331]]
+ => "freezing"
+
+> User.is_colder_than? :warm, :sample => 5
+   (0.4ms)  SELECT updated_at FROM "users" ORDER BY updated_at DESC LIMIT 5
+ => false
+
+> User.first.is_colder_than? :warm, :sample => 5
+  User Load (0.2ms)  SELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT 1
+ => true
+```
+
 
 Copyright
 ---------
