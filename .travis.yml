@@ -10,6 +10,6 @@ env:
 script:
   - RAILS_ENV=test
   - cd ./test/dummy
-  - bundle exec rake db:drop db:create db:migrate db:seed test
+  - bundle exec rake db:drop db:create db:migrate db:test:prepare db:seed
   - cd ../..
   - bundle exec rake test
