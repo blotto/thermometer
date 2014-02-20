@@ -8,5 +8,5 @@ env:
   #- DB=postgresql
 script:
   - RAILS_ENV=test
-  - sh -c 'cd test' && bundle exec rake db:drop db:create db:migrate db:seed test
+  - sh -c 'cd dummy' && bundle exec rake db:drop db:create db:migrate db:seed test
   - sh -c 'cd ..' && bundle exec rake test
