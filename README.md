@@ -10,7 +10,7 @@ Thermometer
 This plugin introduces two mixins to your recipe book:
 
 1. **acts\_as\_thermometer** : Extends Instance with temperature methods
-2. **measure\_the\_heat\_on** : Allows customization on an association, or method that returns an ActiveRecord Collection
+2. **measure\_temperature\_for** : Allows customization on an association
 
 
 ### Motivation
@@ -47,9 +47,7 @@ available options, read the comments within the YAML file.
 
 ### ActiveRecord Dependency
 
-Models must have the automatically managed columns *created_at* and *updated_at* in order to evaluate the temperature.
-
-
+Models must have the managed columns *created_at* and *updated_at* in order to evaluate the temperature.
 
 Typical Usage for `acts_as_thermometer`
 -----
@@ -172,7 +170,7 @@ class User < ActiveRecord::Base
  => :none
  ```
 
- ### Overriding options via method call
+### Overriding options via method calls
 
 ```ruby
 > User.first.newest_messages.has_temperature :sample => 5
@@ -194,6 +192,32 @@ class User < ActiveRecord::Base
  => true
 ```
 
+### Using AREL Relations directly
+
+You can chain methods on relations. Note, that without explicitly excluding them, defaults will be applied. This example,
+only samples the last record in the ActiveRecord collection.
+
+```ruby
+> User.where('created_at > ?', (Time.now - 3.weeks)).has_temperature
+   (0.5ms)  SELECT updated_at FROM "users" WHERE (created_at > '2014-01-30 00:18:13.260406') ORDER BY updated_at DESC LIMIT 1
+ => "lukewarm"
+```
+
+However, you can disable this by passing the option `:explicit=>true` and sample the entire set :
+
+```ruby
+> User.where('created_at > ?', (Time.now - 3.weeks)).has_temperature :explicit=>true
+   (0.4ms)  SELECT updated_at FROM "users" WHERE (created_at > '2014-01-30 00:18:33.207988')
+ => "temperate"
+```
+
+You can still apply other options :
+
+```ruby
+> User.where('created_at > ?', (Time.now - 3.weeks)).has_temperature :explicit=>true , :date => :updated_at
+   (28.7ms)  SELECT "users"."updated_at" FROM "users" WHERE (created_at > '2014-01-30 00:25:23.563479')
+ => "temperate"
+```
 
 Copyright
 ---------
