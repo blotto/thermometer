@@ -12,7 +12,7 @@ Rails.backtrace_cleaner.remove_silencers!
 
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
-
+Dir.glob("#{File.dirname(__FILE__)}/dummy/app/models/*.rb").sort.each { |file| require_dependency file }
 
 
 
