@@ -1,4 +1,5 @@
-
+require 'rails'
+require 'active_record'
 require 'active_record/fixtures'
 
 User.delete_all
