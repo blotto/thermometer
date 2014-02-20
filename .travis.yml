@@ -8,7 +8,7 @@ env:
   #- DB=mysql
   #- DB=postgresql
 script:
-  - RAILS_ENV=test
+  - RAILS_ENV=development
   - cd ./test/dummy
   - bundle exec rake db:drop db:create db:migrate db:seed test
   - cd ../..
