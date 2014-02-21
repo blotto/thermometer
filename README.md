@@ -5,6 +5,9 @@ Thermometer
 [![Code Climate](https://codeclimate.com/github/blotto/thermometer.png)](https://codeclimate.com/github/blotto/thermometer)
 [![Dependency Status](https://gemnasium.com/blotto/thermometer.png)](https://gemnasium.com/blotto/thermometer)
 [![Coverage Status](https://coveralls.io/repos/blotto/thermometer/badge.png)](https://coveralls.io/r/blotto/thermometer)
+[![Gem Version](https://badge.fury.io/rb/thermometer.png)](http://badge.fury.io/rb/thermometer)
+
+Thermometer measures heat on your ActiveRecord Models. This initial release is for Rails 4, not yet tested for Rails 3.
 
 ### Mixins
 This plugin introduces two mixins to your recipe book:
