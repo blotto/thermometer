@@ -153,7 +153,7 @@ class UserTest < ActiveSupport::TestCase
     ### calls wrap up
 
    test "Instance should return a value from has_temperatures" do
-     assert_not_nil User.has_temperatures
+     assert_not_nil users(:user_1).has_temperatures
    end
 
 
