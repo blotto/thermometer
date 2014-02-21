@@ -100,6 +100,56 @@ class UserTest < ActiveSupport::TestCase
      assert_not_nil User.is_warmer_than?  :warm
    end
 
+   ### overides for options
+
+   test "instance should return a value from has_temperature" do
+     assert_not_nil users(:user_1).has_temperature :sample => 3
+   end
+
+   test "instance should return a value from has_temperature?" do
+     assert_not_nil users(:user_1).has_temperature? :warm , :sample => 3
+   end
+
+   test "instance should return a value from is_colder_than?" do
+     assert_not_nil users(:user_1).is_colder_than? :warm , :sample => 3
+   end
+
+   test "instance should return a value from is_warmer_than?" do
+     assert_not_nil users(:user_1).is_warmer_than? :warm , :sample => 3
+   end
+
+   test "instance association messages should return a value from has_temperature" do
+     assert_not_nil users(:user_1).messages.has_temperature
+   end
+
+   test "instance association messages should return a value from has_temperature?" do
+     assert_not_nil users(:user_1).messages.has_temperature?  :warm , :sample => 3 , :order => 'asc'
+   end
+
+   test "instance association messages should return a value from is_colder_than?" do
+     assert_not_nil users(:user_1).messages.is_colder_than?  :warm , :sample => 3
+   end
+
+   test "instance association messages should return a value from is_warmer_than?" do
+     assert_not_nil users(:user_1).messages.is_warmer_than?  :warm , :order => 'asc'
+   end
+
+   test "Class should return a value from has_temperature" do
+     assert_not_nil User.has_temperature
+   end
+
+   test "Class should return a value from has_temperature?" do
+     assert_not_nil User.has_temperature?  :warm , :sample => 3
+   end
+
+   test "Class should return a value from is_colder_than?" do
+     assert_not_nil User.is_colder_than?  :warm , :sample => 3
+   end
+
+   test "Class should return a value from is_warmer_than?" do
+     assert_not_nil User.is_warmer_than?  :warm , :sample => 3
+   end
+
 
 
 end
