@@ -102,52 +102,58 @@ class UserTest < ActiveSupport::TestCase
 
    ### overides for options
 
-   test "instance should return a value from has_temperature" do
-     assert_not_nil users(:user_1).has_temperature :sample => 3
+   test "instance should return a value from has_temperature with options" do
+     assert_not_nil users(:user_1).has_temperature  :sample => 3 , :order => 'asc'
    end
 
-   test "instance should return a value from has_temperature?" do
+   test "instance should return a value from has_temperature? with options" do
      assert_not_nil users(:user_1).has_temperature? :warm , :sample => 3
    end
 
-   test "instance should return a value from is_colder_than?" do
-     assert_not_nil users(:user_1).is_colder_than? :warm , :sample => 3
+   test "instance should return a value from is_colder_than? with options" do
+     assert_not_nil users(:user_1).is_colder_than? :warm , :order => 'asc'
    end
 
-   test "instance should return a value from is_warmer_than?" do
+   test "instance should return a value from is_warmer_than? with options" do
      assert_not_nil users(:user_1).is_warmer_than? :warm , :sample => 3
    end
 
-   test "instance association messages should return a value from has_temperature" do
-     assert_not_nil users(:user_1).messages.has_temperature
+   test "instance association messages should return a value from has_temperature with options" do
+     assert_not_nil users(:user_1).messages.has_temperature  :date => :created_at
    end
 
-   test "instance association messages should return a value from has_temperature?" do
+   test "instance association messages should return a value from has_temperature? with options" do
      assert_not_nil users(:user_1).messages.has_temperature?  :warm , :sample => 3 , :order => 'asc'
    end
 
-   test "instance association messages should return a value from is_colder_than?" do
+   test "instance association messages should return a value from is_colder_than? with options" do
      assert_not_nil users(:user_1).messages.is_colder_than?  :warm , :sample => 3
    end
 
-   test "instance association messages should return a value from is_warmer_than?" do
+   test "instance association messages should return a value from is_warmer_than? with options" do
      assert_not_nil users(:user_1).messages.is_warmer_than?  :warm , :order => 'asc'
    end
 
-   test "Class should return a value from has_temperature" do
-     assert_not_nil User.has_temperature
+   test "Class should return a value from has_temperature with options" do
+     assert_not_nil User.has_temperature :date => :created_at
    end
 
-   test "Class should return a value from has_temperature?" do
+   test "Class should return a value from has_temperature? with options" do
      assert_not_nil User.has_temperature?  :warm , :sample => 3
    end
 
-   test "Class should return a value from is_colder_than?" do
+   test "Class should return a value from is_colder_than? with options" do
      assert_not_nil User.is_colder_than?  :warm , :sample => 3
    end
 
-   test "Class should return a value from is_warmer_than?" do
+   test "Class should return a value from is_warmer_than? with options" do
      assert_not_nil User.is_warmer_than?  :warm , :sample => 3
+   end
+
+    ### calls wrap up
+
+   test "Instance should return a value from has_temperatures" do
+     assert_not_nil User.has_temperatures
    end
 
 
