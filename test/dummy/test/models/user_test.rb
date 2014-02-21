@@ -139,21 +139,35 @@ class UserTest < ActiveSupport::TestCase
    end
 
    test "Class should return a value from has_temperature? with options" do
-     assert_not_nil User.has_temperature?  :warm , :sample => 3
+     assert_not_nil User.has_temperature?  :warm , :explicit => true, :sample => 3
    end
 
    test "Class should return a value from is_colder_than? with options" do
-     assert_not_nil User.is_colder_than?  :warm , :sample => 3
+     assert_not_nil User.is_colder_than?  :warm , :sample => 3 , :order => 'asc'
    end
 
    test "Class should return a value from is_warmer_than? with options" do
-     assert_not_nil User.is_warmer_than?  :warm , :sample => 3
+     assert_not_nil User.is_warmer_than?  :warm , :explicit => true, :order => 'asc'
+   end
+
+   test "Class should return a value from is_warmer_than? with NO options" do
+     assert_not_nil User.is_warmer_than?  :warm , :explicit => true
    end
 
     ### calls wrap up
 
    test "Instance should return a value from has_temperatures" do
      assert_not_nil users(:user_1).has_temperatures
+   end
+
+   ### scopes
+
+   test "Class scope should return a value from has_temperatures" do
+     assert_not_nil User.name_like("Ms.").has_temperature
+   end
+
+   test "Instance scope should return a value from has_temperatures" do
+     assert_not_nil users(:user_1).last_five_messages.has_temperature
    end
 
 
