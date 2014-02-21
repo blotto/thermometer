@@ -50,5 +50,56 @@ class UserTest < ActiveSupport::TestCase
      assert User.respond_to?(:is_warmer_than?)
    end
 
+   ###
+
+   test "instance should return a value from has_temperature" do
+     assert_not_nil users(:user_1).has_temperature
+   end
+
+   test "instance should return a value from has_temperature?" do
+     assert_not_nil users(:user_1).has_temperature? :warm
+   end
+
+   test "instance should return a value from is_colder_than?" do
+     assert_not_nil users(:user_1).is_colder_than? :warm
+   end
+
+   test "instance should return a value from is_warmer_than?" do
+     assert_not_nil users(:user_1).is_warmer_than? :warm
+   end
+
+   test "instance association messages should return a value from has_temperature" do
+     assert_not_nil users(:user_1).messages.has_temperature
+   end
+
+   test "instance association messages should return a value from has_temperature?" do
+     assert_not_nil users(:user_1).messages.has_temperature?  :warm
+   end
+
+   test "instance association messages should return a value from is_colder_than?" do
+     assert_not_nil users(:user_1).messages.is_colder_than?  :warm
+   end
+
+   test "instance association messages should return a value from is_warmer_than?" do
+     assert_not_nil users(:user_1).messages.is_warmer_than?  :warm
+   end
+
+   test "Class should return a value from has_temperature" do
+     assert_not_nil User.has_temperature
+   end
+
+   test "Class should return a value from has_temperature?" do
+     assert_not_nil User.has_temperature?  :warm
+   end
+
+   test "Class should return a value from is_colder_than?" do
+     assert_not_nil User.is_colder_than?  :warm
+   end
+
+   test "Class should return a value from is_warmer_than?" do
+     assert_not_nil User.is_warmer_than?  :warm
+   end
+
+
 
 end
