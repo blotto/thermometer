@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = Thermometer::VERSION
   s.authors     = ["Nick Newell"]
   s.email       = ["blotto@gmail.com"]
-  s.homepage    = "https://gitlab.com/u/blotto"
+  s.homepage    = "https://github.com/blotto/thermometer"
   s.summary     = "Thermometer measures heat on your ActiveRecord Models."
   s.description = "Thermometer measures heat on your ActiveRecord Models.  This initial release is for Rails 4, not yet tested for Rails 3"
 

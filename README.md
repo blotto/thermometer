@@ -34,6 +34,8 @@ Installation
 In your gemfile
 
 ```ruby
+gem "thermometer"
+#or to pick up a dev branch
 gem "temperature"  , github: 'blotto/temperature', :branch => "first_release"
 ```
 
