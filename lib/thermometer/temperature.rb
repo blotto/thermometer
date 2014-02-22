@@ -10,6 +10,7 @@ module Thermometer
 
     module ClassMethods
       include Evaluate::Temperatures
+      include ActiveRecord::QueryMethods
 
       def acts_as_thermometer
         include Thermometer::Temperature::InstanceMethods
@@ -44,15 +45,7 @@ module Thermometer
       def sample_records options
         options = Thermometer.configuration.process_scope_options(options)
 
-        if options[:limit] && options[:order]
-          sample = limit(options[:limit]).order(options[:order]).pluck(options[:date])
-        elsif options[:limit] && options[:order].nil?
-          sample = limit(options[:limit]).pluck(options[:date])
-        elsif options[:limit].nil? && options[:order]
-          sample = order(options[:order]).pluck(options[:date])
-        else
-          sample = pluck(options[:date])
-        end
+        sample options
       end
 
     end
