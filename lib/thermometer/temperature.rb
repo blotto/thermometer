@@ -45,7 +45,7 @@ module Thermometer
       def sample_records options
         options = Thermometer.configuration.process_scope_options(options)
 
-        sample options
+        data_sample options
       end
 
     end
