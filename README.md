@@ -133,9 +133,9 @@ User.name_like("Ms.").first.last_five_messages.has_temperature # warm
 Reference Date
 -----
 
-The temperature is measured by the `age` of a record or the average age of a set of records from a reference date.
+The temperature is measured by the age of a record or the average age of a set of records from a reference date.
 By default, this reference date is DateTime.now.  However you can change the reference date when making calls to
-the three main methods of this Gem.
+the three main methods of this Gem. For example , on `has_temperature` :
 
 ```ruby
 User.first.has_temperature
@@ -150,6 +150,28 @@ User.last.oldest_messages.has_temperature
  User.last.oldest_messages.has_temperature date_reference: DateTime.now - 2.month
  => "chilly"
 ```
+
+### Why is this useful?
+
+Iterating through a range of dates to find temperatures is a simple way to provide data for a heat map.
+This code example iterates over the last month for a User.
+
+```ruby
+heat_map = Hash.new
+first = DateTime.now - 1.month
+last  = DateTime.now
+first.upto(last).each do |d| heat_map[d.strftime('%F')] = ( User.first.has_temperature date_reference: d ) end
+heat_map
+=> {"2014-01-25"=>"cold", "2014-01-26"=>"cold", "2014-01-27"=>"cold", "2014-01-28"=>"cold", "2014-01-29"=>"cold",
+    "2014-01-30"=>"cold", "2014-01-31"=>"cold", "2014-02-01"=>"cold", "2014-02-02"=>"cold", "2014-02-03"=>"cold",
+    "2014-02-04"=>"cold", "2014-02-05"=>"cold", "2014-02-06"=>"cold", "2014-02-07"=>"cold", "2014-02-08"=>"cold",
+    "2014-02-09"=>"cold", "2014-02-10"=>"cold", "2014-02-11"=>"cold", "2014-02-12"=>"cold", "2014-02-13"=>"cold",
+    "2014-02-14"=>"frosty", "2014-02-15"=>"frosty", "2014-02-16"=>"frosty", "2014-02-17"=>"frosty",
+    "2014-02-18"=>"frosty", "2014-02-19"=>"frosty", "2014-02-20"=>"frosty", "2014-02-21"=>"frosty",
+    "2014-02-22"=>"frosty", "2014-02-23"=>"frosty", "2014-02-24"=>"frosty", "2014-02-25"=>"frosty"}
+
+```
+
 
 Options
 -----
