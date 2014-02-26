@@ -2,18 +2,22 @@ module Thermometer
   module Evaluate
     module CalcsForTime
 
-      def time_diff_for(date, increment: :days, reference: DateTime.now)
-        now = Time.at(reference)
+      def time_diff_for(date, opts={}) # increment: :days, reference: DateTime.now)
+        defaults = {:increment => :days}
+        opts = defaults.merge(opts)
+        now = Time.at(opts[:reference])
         diff = (now - date).to_i
-        (diff.to_f/1.send(increment)).send(increment)
+        (diff.to_f/1.send(opts[:increment])).send(opts[:increment])
       end
 
       ##
       # @sample is an array of timestamps
       # @reference is a point in time to evaluate the time_diff
-      def average(sample, increment: :days, reference: DateTime.now)
-        (sample.map { |s| time_diff_for(s,:increment => increment,:reference => reference)  }.
-            inject{ |d,e| d+ e}.to_f / sample.size.send(increment)).send(increment)
+      def average(sample, opts={} ) #increment: :days, reference: DateTime.now)
+        defaults = {:increment => :days}
+        opts = defaults.merge(opts)
+        (sample.map { |s| time_diff_for(s,:increment => opts[:increment],:reference => opts[:reference])  }.
+            inject{ |d,e| d+ e}.to_f / sample.size.send(opts[:increment])).send(opts[:increment])
       end
 
       def min
