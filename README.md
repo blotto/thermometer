@@ -147,14 +147,14 @@ User.first.has_temperature date_reference: DateTime.now - 2.month # what was the
 
 User.last.oldest_messages.has_temperature
  => "frosty"
- User.last.oldest_messages.has_temperature date_reference: DateTime.now - 2.month
+ User.last.oldest_messages.has_temperature date_reference: DateTime.now - 2.months
  => "chilly"
 ```
 
 ### Why is this useful?
 
-Iterating through a range of dates to find temperatures is a simple way to provide data for a heat map.
-This code example iterates over the last month for a User.
+Iterating through a range of dates to find temperatures can provide data for a heat map. This code example iterates over
+ the last month for a User.
 
 ```ruby
 heat_map = Hash.new

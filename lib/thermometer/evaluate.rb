@@ -12,7 +12,7 @@ module Thermometer
       # @sample is an array of timestamps
       # @reference is a point in time to evaluate the time_diff
       def average(sample, increment: :days, reference: DateTime.now)
-        (sample.map { |s| time_diff_for(s,increment: increment,reference: reference)  }.
+        (sample.map { |s| time_diff_for(s,:increment => increment,:reference => reference)  }.
             inject{ |d,e| d+ e}.to_f / sample.size.send(increment)).send(increment)
       end
 
@@ -33,9 +33,9 @@ module Thermometer
         sample = sample_records options
 
         if sample.size > 1
-          evaluate_level(average(sample,  reference: date_reference))
+          evaluate_level(average(sample,  :reference => date_reference))
         elsif sample.size == 1
-          evaluate_level(time_diff_for(sample.first, reference: date_reference))
+          evaluate_level(time_diff_for(sample.first, :reference => date_reference))
         else
           :none
         end
