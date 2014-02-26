@@ -2,7 +2,7 @@ module Thermometer
   module Evaluate
     module CalcsForTime
 
-      def time_diff_for(date, increment=:days, reference=DateTime.now)
+      def time_diff_for(date, increment: :days, reference: DateTime.now)
         now = Time.at(reference)
         diff = (now - date).to_i
         (diff.to_f/1.send(increment)).send(increment)
@@ -11,8 +11,8 @@ module Thermometer
       ##
       # @sample is an array of timestamps
       # @reference is a point in time to evaluate the time_diff
-      def average(sample, increment=:days, reference=DateTime.now)
-        (sample.map { |s| time_diff_for(s,increment,reference)  }.
+      def average(sample, increment: :days, reference: DateTime.now)
+        (sample.map { |s| time_diff_for(s,increment: increment,reference: reference)  }.
             inject{ |d,e| d+ e}.to_f / sample.size.send(increment)).send(increment)
       end
 
@@ -28,13 +28,14 @@ module Thermometer
     module Temperatures
       include Thermometer::Evaluate::CalcsForTime
 
-
       def has_temperature(options={})
+        date_reference =  options[:date_reference].nil? ? DateTime.now : options[:date_reference]
         sample = sample_records options
+
         if sample.size > 1
-          evaluate_level(average(sample))
+          evaluate_level(average(sample,  reference: date_reference))
         elsif sample.size == 1
-          evaluate_level(time_diff_for(sample.first))
+          evaluate_level(time_diff_for(sample.first, reference: date_reference))
         else
           :none
         end

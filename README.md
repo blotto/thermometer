@@ -54,7 +54,7 @@ available options, read the comments within the YAML file.
 
 Models must have the managed columns *created_at* and *updated_at* in order to evaluate the temperature.
 
-Typical Usage for `acts_as_thermometer`
+Usage
 -----
 
 Measure the temperature on the Class , and on an Instance
@@ -130,8 +130,28 @@ User.name_like("Ms.").has_temperature               # temperate
 User.name_like("Ms.").first.last_five_messages.has_temperature # warm
 ```
 
+Reference Date
+-----
 
-Customizing Usage
+The temperature is measured by the `age` of a record or the average age of a set of records from a reference date.
+By default, this reference date is DateTime.now.  However you can change the reference date when making calls to
+the three main methods of this Gem.
+
+```ruby
+User.first.has_temperature
+ => "frosty"
+User.first.has_temperature date_reference: DateTime.now # equivalent to above call
+ => "frosty"
+User.first.has_temperature date_reference: DateTime.now - 2.month # what was the temperature 2 months ago.
+ => "temperate"
+
+User.last.oldest_messages.has_temperature
+ => "frosty"
+ User.last.oldest_messages.has_temperature date_reference: DateTime.now - 2.month
+ => "chilly"
+```
+
+Options
 -----
 
 In most cases, how you measure the temperature is consistent across Models, and Associations, therefore keep your customizations

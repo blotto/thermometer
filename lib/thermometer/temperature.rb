@@ -12,6 +12,8 @@ module Thermometer
       include Evaluate::Temperatures
       include ActiveRecord::QueryMethods
 
+
+
       def acts_as_thermometer
         include Thermometer::Temperature::InstanceMethods
       end
@@ -58,12 +60,12 @@ module Thermometer
       ##
       # Rollup all associations and self into a hash
       #
-      def has_temperatures
+      def has_temperatures options={}
         results = {}
         reflections.select {|r,v| v.options.has_key? :thermometer}.each do |r,v|
-          results[r] = send(r).has_temperature
+          results[r] = send(r).has_temperature options
         end
-        results[:self] = has_temperature
+        results[:self] = has_temperature options
 
         return results
       end
