@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    thermometer (0.0.2)
+    thermometer (0.0.3)
       rails (~> 4.0)
 
 GEM
