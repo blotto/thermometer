@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Thermometer by blotto</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Thermometer</h1>
+          <h2>Thermometer measures heat on your ActiveRecord Models and Associations</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/blotto/thermometer/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/blotto/thermometer/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/blotto/thermometer" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="thermometer" class="anchor" href="#thermometer"><span class="octicon octicon-link"></span></a>Thermometer</h1>
+
+<p><a href="http://travis-ci.org/blotto/thermometer"><img src="https://secure.travis-ci.org/blotto/thermometer.png"></a>
+<a href="https://codeclimate.com/github/blotto/thermometer"><img src="https://codeclimate.com/github/blotto/thermometer.png" alt="Code Climate"></a>
+<a href="https://gemnasium.com/blotto/thermometer"><img src="https://gemnasium.com/blotto/thermometer.png" alt="Dependency Status"></a>
+<a href="https://coveralls.io/r/blotto/thermometer"><img src="https://coveralls.io/repos/blotto/thermometer/badge.png" alt="Coverage Status"></a>
+<a href="http://badge.fury.io/rb/thermometer"><img src="https://badge.fury.io/rb/thermometer.png" alt="Gem Version"></a></p>
+
+<p>Thermometer measures heat on your ActiveRecord Models. This initial release is for Rails 4, not yet tested for Rails 3.</p>
+
+<h3>
+<a name="mixins" class="anchor" href="#mixins"><span class="octicon octicon-link"></span></a>Mixins</h3>
+
+<p>This plugin introduces two mixins to your recipe book:</p>
+
+<ol>
+<li>
+<strong>acts_as_thermometer</strong> : Extends Instance with temperature methods</li>
+<li>
+<strong>measure_temperature_for</strong> : Allows customization on an association</li>
+</ol><h3>
+<a name="motivation" class="anchor" href="#motivation"><span class="octicon octicon-link"></span></a>Motivation</h3>
+
+<p>This plugin was started as a way for Bots to quickly assess the state of a User across many dimensions of Game play to
+determine automated actions for retention. For example, if a User went <em>cold</em> with regards to reading messages,
+a reminder could be sent. Rather than dealing with dates and duration, coding uses a simplified syntax,
+for example :</p>
+
+<pre><code>user = User.first
+user.*call_to_some_action* if user.unread_messages.has_temperature?(:cold)  # false|true
+user.*call_to_some_action* if user.unread_messages.is_colder_than?(:warm)   # false|true
+</code></pre>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>In your gemfile</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">gem</span> <span class="s2">"thermometer"</span>
+<span class="c1">#or to pick up a dev branch</span>
+<span class="n">gem</span> <span class="s2">"temperature"</span>  <span class="p">,</span> <span class="ss">github</span><span class="p">:</span> <span class="s1">'blotto/temperature'</span><span class="p">,</span> <span class="ss">:branch</span> <span class="o">=&gt;</span> <span class="s2">"first_release"</span>
+</pre></div>
+
+<p>Then at the command line</p>
+
+<pre><code>bundle update --source temperature
+rails generate temperature:install
+</code></pre>
+
+<h2>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h2>
+
+<p>After install a YAML file is placed in the config directory, <em>config/thermometer.yml</em>. For a detailed description of the
+available options, read the comments within the YAML file.</p>
+
+<h3>
+<a name="activerecord-dependency" class="anchor" href="#activerecord-dependency"><span class="octicon octicon-link"></span></a>ActiveRecord Dependency</h3>
+
+<p>Models must have the managed columns <em>created_at</em> and <em>updated_at</em> in order to evaluate the temperature.</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Measure the temperature on the Class , and on an Instance</p>
+
+<div class="highlight highlight-ruby"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+
+  <span class="n">acts_as_thermometer</span>
+
+<span class="k">end</span>
+</pre></div>
+
+<div class="highlight highlight-ruby"><pre><span class="no">User</span><span class="o">.</span><span class="n">has_temperature</span>        <span class="c1"># lukewarm</span>
+<span class="no">User</span><span class="o">.</span><span class="n">is_colder_than?</span> <span class="ss">:warm</span>  <span class="c1"># false</span>
+<span class="no">User</span><span class="o">.</span><span class="n">is_warmer_than?</span> <span class="ss">:cold</span>  <span class="c1"># true</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">has_temperature</span>        <span class="c1"># lukewarm</span>
+<span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">is_colder_than?</span> <span class="ss">:warm</span>  <span class="c1"># false</span>
+<span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">is_warmer_than?</span> <span class="ss">:cold</span>  <span class="c1"># true</span>
+</pre></div>
+
+<p>Measure the temperature on any association. NOTE: declare <code>measures_temperature_for</code> after your associations!</p>
+
+<div class="highlight highlight-ruby"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+
+  <span class="n">acts_as_thermometer</span>
+
+  <span class="n">has_many</span> <span class="ss">:messages</span>
+
+  <span class="n">has_many</span> <span class="ss">:oldest_messages</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="p">{</span><span class="n">where</span><span class="p">(</span><span class="s1">'created_at &lt; ?'</span><span class="p">,</span> <span class="mi">4</span><span class="o">.</span><span class="n">months</span><span class="o">.</span><span class="n">ago</span><span class="p">)}</span> <span class="p">,</span> <span class="n">class_name</span><span class="p">:</span> <span class="s2">"Message"</span>
+  <span class="n">has_many</span> <span class="ss">:recent_messages</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="p">{</span><span class="n">where</span><span class="p">(</span><span class="s1">'created_at &gt; ? AND created_at &lt; ?'</span><span class="p">,</span> <span class="mi">4</span><span class="o">.</span><span class="n">months</span><span class="o">.</span><span class="n">ago</span> <span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">ago</span><span class="p">)}</span> <span class="p">,</span> <span class="n">class_name</span><span class="p">:</span> <span class="s2">"Message"</span>
+  <span class="n">has_many</span> <span class="ss">:newest_messages</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="p">{</span><span class="n">where</span><span class="p">(</span><span class="s1">'created_at &gt; ?'</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">ago</span><span class="p">)}</span> <span class="p">,</span> <span class="n">class_name</span><span class="p">:</span> <span class="s2">"Message"</span>
+
+  <span class="n">measures_temperature_for</span> <span class="ss">:messages</span><span class="p">,</span> <span class="ss">:oldest_messages</span> <span class="p">,</span> <span class="ss">:recent_messages</span> <span class="p">,</span> <span class="ss">:newest_messages</span>
+
+ <span class="k">end</span>
+</pre></div>
+
+<div class="highlight highlight-ruby"><pre><span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">has_temperature</span>               <span class="c1"># temperate</span>
+<span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">oldest_messages</span><span class="o">.</span><span class="n">has_temperature</span>        <span class="c1"># frigid</span>
+<span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">recent_messages</span><span class="o">.</span><span class="n">is_colder_than?</span> <span class="ss">:warm</span>  <span class="c1"># false</span>
+<span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">newest_messages</span><span class="o">.</span><span class="n">is_warmer_than?</span> <span class="ss">:cold</span>  <span class="c1"># true</span>
+</pre></div>
+
+<h2>
+<a name="method-chaining" class="anchor" href="#method-chaining"><span class="octicon octicon-link"></span></a>Method Chaining</h2>
+
+<p>You can check the temperature on scopes...</p>
+
+<div class="highlight highlight-ruby"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+
+  <span class="n">acts_as_thermometer</span>
+
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+      <span class="k">def</span> <span class="nf">name_like</span><span class="p">(</span><span class="n">substring</span><span class="p">)</span>
+        <span class="n">where</span><span class="p">(</span><span class="s2">"name LIKE '%</span><span class="si">#{</span><span class="n">substring</span><span class="si">}</span><span class="s2">%'"</span><span class="p">)</span>
+      <span class="k">end</span>
+   <span class="k">end</span>
+
+   <span class="k">def</span> <span class="nf">last_five_messages</span>
+     <span class="n">messages</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+   <span class="k">end</span>
+
+ <span class="k">end</span>
+</pre></div>
+
+<div class="highlight highlight-ruby"><pre><span class="no">User</span><span class="o">.</span><span class="n">name_like</span><span class="p">(</span><span class="s2">"Ms."</span><span class="p">)</span><span class="o">.</span><span class="n">has_temperature</span>               <span class="c1"># temperate</span>
+<span class="no">User</span><span class="o">.</span><span class="n">name_like</span><span class="p">(</span><span class="s2">"Ms."</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">last_five_messages</span><span class="o">.</span><span class="n">has_temperature</span> <span class="c1"># warm</span>
+</pre></div>
+
+<h2>
+<a name="reference-date" class="anchor" href="#reference-date"><span class="octicon octicon-link"></span></a>Reference Date</h2>
+
+<p>The temperature is measured by the age of a record or the average age of a set of records from a reference date.
+By default, this reference date is DateTime.now.  However you can change the reference date when making calls to
+the three main methods of this Gem. For example , on <code>has_temperature</code> :</p>
+
+<div class="highlight highlight-ruby"><pre><span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">has_temperature</span>
+ <span class="o">=&gt;</span> <span class="s2">"frosty"</span>
+<span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">has_temperature</span> <span class="n">date_reference</span><span class="p">:</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span> <span class="c1"># equivalent to above call</span>
+ <span class="o">=&gt;</span> <span class="s2">"frosty"</span>
+<span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">has_temperature</span> <span class="n">date_reference</span><span class="p">:</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="mi">2</span><span class="o">.</span><span class="n">month</span> <span class="c1"># what was the temperature 2 months ago.</span>
+ <span class="o">=&gt;</span> <span class="s2">"temperate"</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">oldest_messages</span><span class="o">.</span><span class="n">has_temperature</span>
+ <span class="o">=&gt;</span> <span class="s2">"frosty"</span>
+ <span class="no">User</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">oldest_messages</span><span class="o">.</span><span class="n">has_temperature</span> <span class="n">date_reference</span><span class="p">:</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="mi">2</span><span class="o">.</span><span class="n">months</span>
+ <span class="o">=&gt;</span> <span class="s2">"chilly"</span>
+</pre></div>
+
+<h3>
+<a name="why-is-this-useful" class="anchor" href="#why-is-this-useful"><span class="octicon octicon-link"></span></a>Why is this useful?</h3>
+
+<p>Iterating through a range of dates to find temperatures can provide data for a heat map. This code example iterates over
+ the last month for a User.</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">heat_map</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span>
+<span class="n">first</span> <span class="o">=</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="mi">1</span><span class="o">.</span><span class="n">month</span>
+<span class="n">last</span>  <span class="o">=</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">now</span>
+<span class="n">first</span><span class="o">.</span><span class="n">upto</span><span class="p">(</span><span class="n">last</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">d</span><span class="o">|</span> <span class="n">heat_map</span><span class="o">[</span><span class="n">d</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%F'</span><span class="p">)</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span> <span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">has_temperature</span> <span class="n">date_reference</span><span class="p">:</span> <span class="n">d</span> <span class="p">)</span> <span class="k">end</span>
+<span class="n">heat_map</span>
+<span class="o">=&gt;</span> <span class="p">{</span><span class="s2">"2014-01-25"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-01-26"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-01-27"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-01-28"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-01-29"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span>
+    <span class="s2">"2014-01-30"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-01-31"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-02-01"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-02-02"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-02-03"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span>
+    <span class="s2">"2014-02-04"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-02-05"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-02-06"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-02-07"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-02-08"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span>
+    <span class="s2">"2014-02-09"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-02-10"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-02-11"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-02-12"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span> <span class="s2">"2014-02-13"</span><span class="o">=&gt;</span><span class="s2">"cold"</span><span class="p">,</span>
+    <span class="s2">"2014-02-14"</span><span class="o">=&gt;</span><span class="s2">"frosty"</span><span class="p">,</span> <span class="s2">"2014-02-15"</span><span class="o">=&gt;</span><span class="s2">"frosty"</span><span class="p">,</span> <span class="s2">"2014-02-16"</span><span class="o">=&gt;</span><span class="s2">"frosty"</span><span class="p">,</span> <span class="s2">"2014-02-17"</span><span class="o">=&gt;</span><span class="s2">"frosty"</span><span class="p">,</span>
+    <span class="s2">"2014-02-18"</span><span class="o">=&gt;</span><span class="s2">"frosty"</span><span class="p">,</span> <span class="s2">"2014-02-19"</span><span class="o">=&gt;</span><span class="s2">"frosty"</span><span class="p">,</span> <span class="s2">"2014-02-20"</span><span class="o">=&gt;</span><span class="s2">"frosty"</span><span class="p">,</span> <span class="s2">"2014-02-21"</span><span class="o">=&gt;</span><span class="s2">"frosty"</span><span class="p">,</span>
+    <span class="s2">"2014-02-22"</span><span class="o">=&gt;</span><span class="s2">"frosty"</span><span class="p">,</span> <span class="s2">"2014-02-23"</span><span class="o">=&gt;</span><span class="s2">"frosty"</span><span class="p">,</span> <span class="s2">"2014-02-24"</span><span class="o">=&gt;</span><span class="s2">"frosty"</span><span class="p">,</span> <span class="s2">"2014-02-25"</span><span class="o">=&gt;</span><span class="s2">"frosty"</span><span class="p">}</span>
+
+</pre></div>
+
+<h2>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h2>
+
+<p>In most cases, how you measure the temperature is consistent across Models, and Associations, therefore keep your customizations
+global by changing options in the YAML file.  However, you could pass through customizations specific to a particular use
+case.</p>
+
+<p>Configs can be passed through in a number of scenarios.</p>
+
+<h3>
+<a name="overriding-options-via-measures_temperature_for" class="anchor" href="#overriding-options-via-measures_temperature_for"><span class="octicon octicon-link"></span></a>Overriding options via measures_temperature_for</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+
+  <span class="n">acts_as_thermometer</span>
+
+  <span class="n">has_many</span> <span class="ss">:messages</span>
+
+  <span class="n">has_many</span> <span class="ss">:oldest_messages</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="p">{</span><span class="n">where</span><span class="p">(</span><span class="s1">'created_at &lt; ?'</span><span class="p">,</span> <span class="mi">4</span><span class="o">.</span><span class="n">months</span><span class="o">.</span><span class="n">ago</span><span class="p">)}</span> <span class="p">,</span> <span class="n">class_name</span><span class="p">:</span> <span class="s2">"Message"</span>
+  <span class="n">has_many</span> <span class="ss">:recent_messages</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="p">{</span><span class="n">where</span><span class="p">(</span><span class="s1">'created_at &gt; ? AND created_at &lt; ?'</span><span class="p">,</span> <span class="mi">4</span><span class="o">.</span><span class="n">months</span><span class="o">.</span><span class="n">ago</span> <span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">ago</span><span class="p">)}</span> <span class="p">,</span> <span class="n">class_name</span><span class="p">:</span> <span class="s2">"Message"</span>
+  <span class="n">has_many</span> <span class="ss">:newest_messages</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="p">{</span><span class="n">where</span><span class="p">(</span><span class="s1">'created_at &gt; ?'</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">ago</span><span class="p">)}</span> <span class="p">,</span> <span class="n">class_name</span><span class="p">:</span> <span class="s2">"Message"</span>
+
+  <span class="n">measures_temperature_for</span> <span class="ss">:messages</span><span class="p">,</span> <span class="p">{</span><span class="ss">:explicit</span><span class="o">=&gt;</span><span class="kp">true</span><span class="p">,</span> <span class="ss">:date</span> <span class="o">=&gt;</span> <span class="ss">:updated_at</span><span class="p">}</span>  <span class="c1">#only use options defined here</span>
+  <span class="n">measures_temperature_for</span> <span class="ss">:recent_messages</span><span class="p">,</span> <span class="p">{</span><span class="ss">:date</span> <span class="o">=&gt;</span> <span class="s1">'updated_at'</span><span class="p">}</span> <span class="c1">#use this date, and default options</span>
+  <span class="n">measures_temperature_for</span> <span class="ss">:newest_messages</span><span class="p">,</span>
+                    <span class="p">{</span><span class="ss">:date</span> <span class="o">=&gt;</span> <span class="s1">'messages.updated_at'</span><span class="p">,</span> <span class="ss">:sample</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">}</span> <span class="c1">#clearly defined date field, sampling 3 records</span>
+
+ <span class="k">end</span>
+
+</pre></div>
+
+<div class="highlight highlight-ruby"><pre><span class="o">&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">has_temperature</span>
+  <span class="no">User</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">"users"</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">"users"</span> <span class="no">ORDER</span> <span class="no">BY</span> <span class="s2">"users"</span><span class="o">.</span><span class="s2">"id"</span> <span class="no">ASC</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+   <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">4</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">"messages"</span><span class="o">.</span><span class="s2">"updated_at"</span> <span class="no">FROM</span> <span class="s2">"messages"</span> <span class="no">WHERE</span> <span class="s2">"messages"</span><span class="o">.</span><span class="s2">"user_id"</span> <span class="o">=</span> <span class="p">?</span>  <span class="o">[[</span><span class="s2">"user_id"</span><span class="p">,</span> <span class="mi">14035331</span><span class="o">]]</span>
+ <span class="o">=&gt;</span> <span class="s2">"frosty"</span>
+
+<span class="o">&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">newest_messages</span><span class="o">.</span><span class="n">has_temperature</span>
+  <span class="no">User</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">"users"</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">"users"</span> <span class="no">ORDER</span> <span class="no">BY</span> <span class="s2">"users"</span><span class="o">.</span><span class="s2">"id"</span> <span class="no">ASC</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+    <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">6</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="n">messages</span><span class="o">.</span><span class="n">created_at</span> <span class="no">FROM</span> <span class="s2">"messages"</span> <span class="no">WHERE</span> <span class="s2">"messages"</span><span class="o">.</span><span class="s2">"user_id"</span> <span class="o">=</span> <span class="p">?</span> <span class="no">AND</span> <span class="p">(</span><span class="n">created_at</span> <span class="o">&gt;</span>
+    <span class="s1">'2014-01-19 23:44:59.413221'</span><span class="p">)</span> <span class="no">ORDER</span> <span class="no">BY</span> <span class="n">messages</span><span class="o">.</span><span class="n">created_at</span> <span class="no">DESC</span> <span class="no">LIMIT</span> <span class="mi">3</span>  <span class="o">[[</span><span class="s2">"user_id"</span><span class="p">,</span> <span class="mi">14035331</span><span class="o">]]</span>
+ <span class="o">=&gt;</span> <span class="ss">:none</span>
+</pre></div>
+
+<h3>
+<a name="overriding-options-via-method-calls" class="anchor" href="#overriding-options-via-method-calls"><span class="octicon octicon-link"></span></a>Overriding options via method calls</h3>
+
+<p>You can pass options on all available methods.</p>
+
+<div class="highlight highlight-ruby"><pre><span class="o">&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">newest_messages</span><span class="o">.</span><span class="n">has_temperature</span> <span class="ss">:sample</span> <span class="o">=&gt;</span> <span class="mi">5</span>
+  <span class="no">User</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">3</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">"users"</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">"users"</span> <span class="no">ORDER</span> <span class="no">BY</span> <span class="s2">"users"</span><span class="o">.</span><span class="s2">"id"</span> <span class="no">ASC</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+   <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">4</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="n">messages</span><span class="o">.</span><span class="n">created_at</span> <span class="no">FROM</span> <span class="s2">"messages"</span> <span class="no">WHERE</span> <span class="s2">"messages"</span><span class="o">.</span><span class="s2">"user_id"</span> <span class="o">=</span> <span class="p">?</span> <span class="no">AND</span> <span class="p">(</span><span class="n">created_at</span> <span class="o">&gt;</span> <span class="s1">'2014-01-20 00:04:54.558920'</span><span class="p">)</span> <span class="no">ORDER</span> <span class="no">BY</span> <span class="n">messages</span><span class="o">.</span><span class="n">created_at</span> <span class="no">DESC</span> <span class="no">LIMIT</span> <span class="mi">5</span>  <span class="o">[[</span><span class="s2">"user_id"</span><span class="p">,</span> <span class="mi">14035331</span><span class="o">]]</span>
+ <span class="o">=&gt;</span> <span class="ss">:none</span>
+
+<span class="o">&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">has_temperature</span> <span class="ss">:date</span> <span class="o">=&gt;</span> <span class="s1">'created_at'</span>
+  <span class="no">User</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">"users"</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">"users"</span> <span class="no">ORDER</span> <span class="no">BY</span> <span class="s2">"users"</span><span class="o">.</span><span class="s2">"id"</span> <span class="no">ASC</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+   <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">4</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="n">created_at</span> <span class="no">FROM</span> <span class="s2">"messages"</span> <span class="no">WHERE</span> <span class="s2">"messages"</span><span class="o">.</span><span class="s2">"user_id"</span> <span class="o">=</span> <span class="p">?</span>  <span class="o">[[</span><span class="s2">"user_id"</span><span class="p">,</span> <span class="mi">14035331</span><span class="o">]]</span>
+ <span class="o">=&gt;</span> <span class="s2">"freezing"</span>
+
+<span class="o">&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">is_colder_than?</span> <span class="ss">:warm</span><span class="p">,</span> <span class="ss">:sample</span> <span class="o">=&gt;</span> <span class="mi">5</span>
+   <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">4</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="n">updated_at</span> <span class="no">FROM</span> <span class="s2">"users"</span> <span class="no">ORDER</span> <span class="no">BY</span> <span class="n">updated_at</span> <span class="no">DESC</span> <span class="no">LIMIT</span> <span class="mi">5</span>
+ <span class="o">=&gt;</span> <span class="kp">false</span>
+
+<span class="o">&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">is_colder_than?</span> <span class="ss">:warm</span><span class="p">,</span> <span class="ss">:sample</span> <span class="o">=&gt;</span> <span class="mi">5</span>
+  <span class="no">User</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">"users"</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">"users"</span> <span class="no">ORDER</span> <span class="no">BY</span> <span class="s2">"users"</span><span class="o">.</span><span class="s2">"id"</span> <span class="no">ASC</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+ <span class="o">=&gt;</span> <span class="kp">true</span>
+</pre></div>
+
+<h3>
+<a name="using-arel-relations-directly" class="anchor" href="#using-arel-relations-directly"><span class="octicon octicon-link"></span></a>Using AREL Relations directly</h3>
+
+<p>You can chain methods on relations. Note, that without explicitly excluding them, defaults will be applied. This example,
+only samples the last record in the ActiveRecord collection because the default sample size is 1.</p>
+
+<div class="highlight highlight-ruby"><pre><span class="o">&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s1">'created_at &gt; ?'</span><span class="p">,</span> <span class="p">(</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="mi">3</span><span class="o">.</span><span class="n">weeks</span><span class="p">))</span><span class="o">.</span><span class="n">has_temperature</span>
+   <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="n">updated_at</span> <span class="no">FROM</span> <span class="s2">"users"</span> <span class="no">WHERE</span> <span class="p">(</span><span class="n">created_at</span> <span class="o">&gt;</span> <span class="s1">'2014-01-30 00:18:13.260406'</span><span class="p">)</span> <span class="no">ORDER</span> <span class="no">BY</span> <span class="n">updated_at</span> <span class="no">DESC</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+ <span class="o">=&gt;</span> <span class="s2">"lukewarm"</span>
+</pre></div>
+
+<p>However, you can disable this by passing the option <code>:explicit=&gt;true</code> and sample the entire set :</p>
+
+<div class="highlight highlight-ruby"><pre><span class="o">&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s1">'created_at &gt; ?'</span><span class="p">,</span> <span class="p">(</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="mi">3</span><span class="o">.</span><span class="n">weeks</span><span class="p">))</span><span class="o">.</span><span class="n">has_temperature</span> <span class="ss">:explicit</span><span class="o">=&gt;</span><span class="kp">true</span>
+   <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">4</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="n">updated_at</span> <span class="no">FROM</span> <span class="s2">"users"</span> <span class="no">WHERE</span> <span class="p">(</span><span class="n">created_at</span> <span class="o">&gt;</span> <span class="s1">'2014-01-30 00:18:33.207988'</span><span class="p">)</span>
+ <span class="o">=&gt;</span> <span class="s2">"temperate"</span>
+</pre></div>
+
+<p>You can still apply other options :</p>
+
+<div class="highlight highlight-ruby"><pre><span class="o">&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s1">'created_at &gt; ?'</span><span class="p">,</span> <span class="p">(</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="mi">3</span><span class="o">.</span><span class="n">weeks</span><span class="p">))</span><span class="o">.</span><span class="n">has_temperature</span> <span class="ss">:explicit</span><span class="o">=&gt;</span><span class="kp">true</span> <span class="p">,</span> <span class="ss">:date</span> <span class="o">=&gt;</span> <span class="ss">:updated_at</span>
+   <span class="p">(</span><span class="mi">28</span><span class="o">.</span><span class="mi">7</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">"users"</span><span class="o">.</span><span class="s2">"updated_at"</span> <span class="no">FROM</span> <span class="s2">"users"</span> <span class="no">WHERE</span> <span class="p">(</span><span class="n">created_at</span> <span class="o">&gt;</span> <span class="s1">'2014-01-30 00:25:23.563479'</span><span class="p">)</span>
+ <span class="o">=&gt;</span> <span class="s2">"temperate"</span>
+
+<span class="o">&gt;</span> <span class="no">User</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s1">'created_at &gt; ?'</span><span class="p">,</span> <span class="p">(</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">-</span> <span class="mi">3</span><span class="o">.</span><span class="n">weeks</span><span class="p">))</span><span class="o">.</span><span class="n">has_temperature</span> <span class="ss">:explicit</span><span class="o">=&gt;</span><span class="kp">true</span> <span class="p">,</span> <span class="ss">:date</span> <span class="o">=&gt;</span> <span class="ss">:updated_at</span><span class="p">,</span> <span class="ss">:sample</span> <span class="o">=&gt;</span> <span class="mi">6</span><span class="p">,</span> <span class="ss">:order</span> <span class="o">=&gt;</span> <span class="s1">'desc'</span>
+   <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">4</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">"users"</span><span class="o">.</span><span class="s2">"updated_at"</span> <span class="no">FROM</span> <span class="s2">"users"</span> <span class="no">WHERE</span> <span class="p">(</span><span class="n">created_at</span> <span class="o">&gt;</span> <span class="s1">'2014-01-30 00:30:26.123044'</span><span class="p">)</span> <span class="no">ORDER</span> <span class="no">BY</span> <span class="n">updated_at</span> <span class="no">DESC</span> <span class="no">LIMIT</span> <span class="mi">6</span>
+ <span class="o">=&gt;</span> <span class="s2">"temperate"</span>
+</pre></div>
+
+<h2>
+<a name="copyright" class="anchor" href="#copyright"><span class="octicon octicon-link"></span></a>Copyright</h2>
+
+<p>Copyright (c) 2014 Nick Newell. See LICENSE.txt for further details.</p>
+        </section>
+
+        <footer>
+          Thermometer is maintained by <a href="https://github.com/blotto">blotto</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
