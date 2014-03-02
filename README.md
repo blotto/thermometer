@@ -41,8 +41,8 @@ gem "temperature"  , github: 'blotto/temperature', :branch => "first_release"
 
 Then at the command line
 
-	bundle update --source temperature
-	rails generate temperature:install
+	bundle update --source thermometer
+	rails generate thermometer:install
 
 Configuration
 -------------
