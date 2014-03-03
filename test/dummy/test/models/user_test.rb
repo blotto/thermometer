@@ -171,5 +171,11 @@ class UserTest < ActiveSupport::TestCase
    end
 
 
+    ## heat map
+   test "Instance scope should return a value from heat_map" do
+     assert_not_nil users(:user_1).messages.heat_map users(:user_1).messages.first.created_at
+   end
+
+
 
 end

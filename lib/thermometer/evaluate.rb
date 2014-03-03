@@ -32,6 +32,18 @@ module Thermometer
     module Temperatures
       include Thermometer::Evaluate::CalcsForTime
 
+      def heat_map(first , last= DateTime.now , options={})
+        heat_map = Hash.new
+
+        first = first.to_datetime if first.is_a?(ActiveSupport::TimeWithZone)
+        last = last.to_datetime if last.is_a?(ActiveSupport::TimeWithZone)
+
+        first.upto(last).each do |d|
+          heat_map[d.strftime('%F')] = self.has_temperature options.merge({:date_reference => d})
+        end
+        return heat_map
+      end
+
       def has_temperature(options={})
         date_reference =  options[:date_reference].nil? ? DateTime.now : options[:date_reference]
         sample = sample_records options
