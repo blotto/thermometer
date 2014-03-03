@@ -1,0 +1,76 @@
+# Here are the settings that are common to all environments
+common: &default_settings
+
+  # ============================== DEFAULT OPTIONS ===============================
+
+  date: updated_at
+  sample: 1
+  order: DESC
+
+
+  # ============================== TIME RANGES ===============================
+
+  # By default this time range wil be used, unless explicitly defined as an option in the class
+  # method 'measure_heat_on'
+  # Example :
+  #         measure_the_heat_on :friends , time_range: :brief
+  #         measure_the_heat_on :friends , time_range: {hot: 1.second..1.hour, cold: 1.hour..1.year}
+  #
+  #
+
+  time_range:       detailed
+  intensity_range:  brief
+
+  # Multiple time ranges can be defined here.
+
+  time:
+    detailed:
+      freezing:   4.months..100.years
+      frigid:     3.months..4.months
+      frosty:     2.months..3.months
+      cold:       5.weeks..2.months
+      chilly:     3.weeks..5.weeks
+      cool:       2.weeks..3.weeks
+      temperate:  1.week..2.weeks
+      tepid:      4.days..1.week
+      lukewarm:   2.days..4.days
+      warm:       1.day..2.days
+      hot:        14.hours..1.day
+      burning:    10.hours..14.hours
+      boiling:    6.hours..10.hours
+      scalding:   3.hours..6.hours
+      scorching:  1.hours..3.hours
+      searing:    1.second..1.hour
+
+    brief:
+      cold:      3.days..100.years
+      hot:       1.second..3.days
+
+  intensity:
+    detailed:
+        very_light:         1..5
+        light:              5..10
+        slightly_moderate:  10..15
+        moderate:           15..25
+        heavy:              25..50
+        very_heavy:         50
+
+    brief:
+      light:    1..5
+      moderate: 5..15
+      heavy:    15
+# Application Environments
+# ------------------------------------------
+
+test:
+  <<: *default_settings
+
+development:
+  <<: *default_settings
+
+staging:
+  <<: *default_settings
+
+production:
+  <<: *default_settings
+

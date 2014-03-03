@@ -1,0 +1,12 @@
+<% require 'faker' %>
+<% require 'helper_methods' %>
+<% @users = (1..50).to_a %>
+
+
+
+<% (@users.size).times do |n| %>
+user_<%= n %>:
+  name: <%= Faker::Name.name %>
+  created_at: <%= @created_at = time_rand(Time.now-6.months) %>
+  updated_at: <%= time_rand(@created_at) %>
+<% end %>

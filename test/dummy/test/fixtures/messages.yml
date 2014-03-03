@@ -1,0 +1,29 @@
+<% require 'faker' %>
+<% require 'helper_methods' %>
+<% @users = (1..50).to_a %>
+<% @owners = @users %>
+
+
+
+
+<% (@owners.size).times do |n| %>
+
+<% @owner =  @owners.delete(@owners.sample) %>
+
+message0_<%= n %>:
+  content: <%= Faker::Lorem.words 5 %>
+  created_at: <%= @created_at = time_rand(Time.now-6.months) %>
+  updated_at: <%= time_rand(@created_at) %>
+  user: <%= "user_#{@owner}" %>
+message1_<%= n %>:
+  content: <%= Faker::Lorem.words 5 %>
+  created_at: <%= @created_at = time_rand(Time.now-6.months) %>
+  updated_at: <%= time_rand(@created_at) %>
+  user: <%= "user_#{@owner}" %>
+message2_<%= n %>:
+  content: <%= Faker::Lorem.words 5 %>
+  created_at: <%= @created_at = time_rand(Time.now-6.months) %>
+  updated_at: <%= time_rand(@created_at) %>
+  user: <%= "user_#{@owner}" %>
+
+<% end %>
