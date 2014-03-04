@@ -130,7 +130,7 @@ User.name_like("Ms.").has_temperature               # temperate
 User.name_like("Ms.").first.last_five_messages.has_temperature # warm
 ```
 
-Reference Date
+Reference Date & Heat Map
 -----
 
 The temperature is measured by the age of a record or the average age of a set of records from a reference date.
@@ -169,9 +169,14 @@ heat_map
     "2014-02-14"=>"frosty", "2014-02-15"=>"frosty", "2014-02-16"=>"frosty", "2014-02-17"=>"frosty",
     "2014-02-18"=>"frosty", "2014-02-19"=>"frosty", "2014-02-20"=>"frosty", "2014-02-21"=>"frosty",
     "2014-02-22"=>"frosty", "2014-02-23"=>"frosty", "2014-02-24"=>"frosty", "2014-02-25"=>"frosty"}
-
 ```
 
+This is now supported, as of 0.0.4, in the methods call `def heat_map(first , last= DateTime.now , options={})`.  Use as:
+
+```ruby
+User.first.messages.heat_map User.first.messages.first.created_at
+    => {"2014-01-25"=>"cold", "2014-01-26"=>"cold", "2014-01-27"=>"frosty"}
+```
 
 Options
 -----
