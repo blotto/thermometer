@@ -89,9 +89,15 @@ module Thermometer
         return level
       end
 
-      def compare_level_to(level, options)
-        yield Thermometer.configuration.default_time_range[level].max,
-            Thermometer.configuration.default_time_range[has_temperature(options)].min
+      def compare_level_to(level1, options)
+        time_range = Thermometer.configuration.default_time_range
+
+        level2 = has_temperature(options)
+
+        yield1 = time_range.has_key?(level1) ? time_range[level1].max : 0
+        yield2 = time_range.has_key?(level2) ? time_range[level2].max : 0
+
+        yield yield1, yield2
       end
 
       def sample_records
