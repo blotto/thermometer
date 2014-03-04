@@ -20,4 +20,5 @@ group :staging, :development, :test do
   gem 'faker'       # faker for fixtures
   gem 'squeel'      # easier model associations
   gem 'coveralls', require: false
+  gem 'd3_rails', require: false  #data visualize in dummy app
 end

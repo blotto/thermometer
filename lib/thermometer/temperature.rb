@@ -46,7 +46,7 @@ module Thermometer
 
       def sample_records options
         options = Thermometer.configuration.process_scope_options(options)
-
+        Rails.logger.info (self.class.name) {options.inspect}
         data_sample options
       end
 
