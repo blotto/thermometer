@@ -173,7 +173,17 @@ class UserTest < ActiveSupport::TestCase
 
     ## heat map
    test "Instance scope should return a value from heat_map" do
-     assert_not_nil users(:user_1).messages.heat_map users(:user_1).messages.first.created_at
+    users(:user_1).messages.heat_map(users(:user_1).messages.first.created_at) do |d,t|
+       assert_instance_of DateTime, d
+       assert_not_nil t
+     end
+   end
+
+   test "Instance scope should return a value from heat_map_scaled" do
+     users(:user_1).messages.heat_map_scaled(users(:user_1).messages.first.created_at) do |d,t|
+       assert_instance_of DateTime, d
+       assert_instance_of Fixnum, t
+     end
    end
 
 
