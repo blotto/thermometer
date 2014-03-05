@@ -33,7 +33,7 @@ module Thermometer
 
       def sample_records options
         options = Thermometer.configuration.process_scope_options(proxy_association.reflection.options[:thermometer].merge(options))
-        Rails.logger.info (self.class.name) {options.inspect}
+        #Rails.logger.info (self.class.name) {options.inspect}
         data_sample options
       end
 

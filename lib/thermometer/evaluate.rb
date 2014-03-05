@@ -39,9 +39,14 @@ module Thermometer
         last = last.to_datetime if last.is_a?(ActiveSupport::TimeWithZone)
 
         first.upto(last).each do |d|
-          heat_map[d.strftime('%F')] = self.has_temperature options.merge({:date_reference => d})
+          #heat_map[d.strftime('%F')] = self.has_temperature options.merge({:date_reference => d})
+          yield d, self.has_temperature(options.merge({:date_reference => d}))
         end
-        return heat_map
+        #return heat_map
+      end
+
+      def heat_map_scaled(first , last= DateTime.now , options={})
+        heat_map(first, last, options) do |d,t| yield d, scale_for(t) end
       end
 
       def has_temperature(options={})
@@ -98,6 +103,11 @@ module Thermometer
         yield2 = time_range.has_key?(level2) ? time_range[level2].max : 0
 
         yield yield1, yield2
+      end
+
+      def scale_for key
+        @hash ||= Hash[Thermometer.configuration.default_time_range.keys.map.with_index.to_a]
+        @hash[key].nil? ? 0 : @hash[key]
       end
 
       def sample_records
