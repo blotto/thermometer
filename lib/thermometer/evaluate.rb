@@ -46,7 +46,7 @@ module Thermometer
       end
 
       def heat_map_scaled(first , last= DateTime.now , options={})
-        heat_map(first, last, options) do |d,t| yield d, scale_for(t) end
+        self.heat_map(first, last, options) do |d,t| yield d, scale_for(t) end
       end
 
       def has_temperature(options={})
